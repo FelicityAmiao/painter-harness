@@ -62,3 +62,9 @@ painter-harness/
 | `npm run build` | 生成 `dist/index.html` 单文件站点，部署到服务器即可在线浏览所有 Markdown |
 
 日常使用：在 VS Code 中让 Copilot 执行 `.github/prompts/` 下的 prompt（录课、记练习、调日程、周复盘），或直接说明需求——`.github/copilot-instructions.md` 会自动约束 AI 按规范操作。
+
+## 站点预览
+
+双击 `dist/index.html` 即可在浏览器打开学习仪表盘（单文件站点，`file://` 直接可用，无需起服务器）：
+
+![学习仪表盘预览：里程碑进度、作业队列、技能树统计](screenshot-index.png)
