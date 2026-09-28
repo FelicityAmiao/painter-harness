@@ -8,7 +8,7 @@
 
 1. `data/` 与 `notes/` 下的文件是唯一事实源。不要把学习数据散落在聊天记录或其他文件里。
 2. 严格遵守 conventions 中的 frontmatter schema、字段枚举、文件命名（`id` 必须等于文件名去掉 `.md`）。
-3. **每次写入后运行 `npm run validate`**。出现 error 必须修复后才算完成；出现 warning 必须向用户明说。
+3. **每次写入后运行 `npm run validate`**。出现 error 必须修复后才算完成；出现 warning 必须向用户明说。任何 `data/`、`notes/`、`painter-context/` 下的 md 写入完成后，追加跑 `npm run build`。边界：仅在确有 md 变更后运行；build 失败必须报告用户（`dist/index.html` 会过期）；`reports/` 仍禁手改，但 build 可读。
 4. 生成的汇总只写入 `reports/`（由 `npm run rollup` 生成），不要手改 `reports/` 下的文件。
 5. 不要删除或覆盖用户的练习、上课、反思记录。需要归档或重命名时先征求确认。
 6. 涉及 DDL 变更、里程碑调整、技能树级别升降，先给出依据和方案，用户确认后再改。
@@ -23,7 +23,7 @@
 | `npm run agenda` | 未来 14 天日程（作业 DDL + calendar 事项），逾期置顶 |
 | `npm run next` | 当前作业优先级队列（DDL 驱动） |
 | `npm run rollup` | 生成 `reports/dashboard.md`：里程碑进度条、技能树统计、周练习量 |
-| `npm run build` | 生成单文件静态站点 `dist/index.html`（可部署到服务器） |
+| `npm run build` | 生成单文件静态站点 `dist/index.html`（可部署到服务器；md 写入完成后追加运行） |
 
 ## DDL 优先级规则
 

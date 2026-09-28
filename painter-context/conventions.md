@@ -36,6 +36,8 @@
 | `start_date`, `end_date` | | ISO，未知留空 |
 | `status` | | `planned` \| `active` \| `paused` \| `completed`（默认 active） |
 
+正文可含 `## 预习记录` 小节（按 `### YYYY-MM-DD` 分日期小节，记录课前预习与课后回填要点）——仅描述正文，不进 frontmatter。
+
 ### session（`data/sessions/`）
 
 | 字段 | 必填 | 说明 |

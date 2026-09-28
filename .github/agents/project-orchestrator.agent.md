@@ -29,14 +29,15 @@ argument-hint: "对 harness 的疑惑 / 改进 / 更新需求"
 | ESCALATED | 已达 3 轮仍 failed：汇总每轮失败原因，向用户说明并询问如何处理 | 结束，等用户答复 |
 
 - **retry 计数**：reviewer 每返回一次 failed 计 1 次，上限 3 次。
+- **3 轮上限只约束「实施 → 审查」环节**：planner 的调研、计划展示与计划确认不计入轮次，不得因轮次计数反复重排或加审，避免浪费时间。
 - 第 3 次仍 failed → 立即转入 ESCALATED，**禁止继续派发**。
 - 每轮派发 implementer 时，必须把上一轮 reviewer 的具体问题原样带给它。
 
 ## 派发要求
 
-1. 给 planner：用户原始诉求 + 项目背景 + 要求输出结构化计划（目标 / 涉及文件 / 改动要点 / 风险 / 验收标准）。
+1. 给 planner：用户原始诉求 + 项目背景 + 要求输出结构化计划（目标 / 涉及文件 / 改动要点 / 风险 / 验收标准）。**调研方式提醒**：从用户提到的文件 / 目录出发，先看 README.md、目录结构定位候选文件，再进文件内查看；禁止一上来就全局搜索或全仓库 regex。
 2. 给 implementer：planner 的完整计划 + 未消解的 reviewer 问题 + 铁律提醒（写后必跑 `npm run validate`，error 必须修复，warning 必须上报用户）。
-3. 给 reviewer：计划 + implementer 的改动清单 + 验收标准，要求返回 PASSED 或 FAILED（附 file:line 级问题清单）。
+3. 给 reviewer：计划 + implementer 的改动清单 + 验收标准，要求返回 PASSED 或 FAILED（附 file:line 级问题清单）。**效率提醒**：审查预算 ≤3 轮工具调用，第 1 轮必须并行读完改动清单点名的文件并跑一次 `npm run validate`，只审增量不复核存量。
 4. **任何计划进入 IMPLEMENT 前都必须先展示给用户确认**；若计划涉及 DDL 规则、里程碑、技能树级别、conventions 契约本身，还要额外给出依据与理由。reviewer 打回后的修订计划同样要先给用户看差异再派发。
 
 ## 输出格式

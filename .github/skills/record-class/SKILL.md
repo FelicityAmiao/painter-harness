@@ -22,9 +22,9 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 
 按 [pre-class-checklist.md](./references/pre-class-checklist.md) 执行。要点：
 
-1. `data/calendar.md` **去重后**追加上课条目；
-2. 用 `templates/session.md` 建骨架 `data/sessions/YYYY-MM-DD-<course-id>.md`，frontmatter 只填事实（id/date/course，技能可预判才填），正文顶部加 `> 状态：课前预览 · 待上课后补全`；
-3. `## 预习` 只写**有来源的**推测（大纲、上次疑问、课前作业、技能级别、相关笔记），每条标来源，推测标"（推测）"；
+1. 询问本次**上课时刻（HH:MM）**后，`data/calendar.md` **去重后**追加上课条目（格式 `- YYYY-MM-DD · HH:MM <课程名> 上课`，时刻写在 `·` 之后）；
+2. 用 `templates/session.md` 建骨架 `data/sessions/YYYY-MM-DD-<course-id>.md`，frontmatter 只填事实（id/date/course，技能可预判才填），正文顶部加 `> 状态：课前预览 · 待上课后补全`，其下补 `> 上课时刻：HH:MM（用户提供）`；
+3. 预习**主写入** `data/courses/<id>.md` 的 `## 预习记录`（`### YYYY-MM-DD` 小节：脉络图 + 速览表），session 的 `## 预习` 只留精简版——只写**有来源的**推测（大纲、上次疑问、课前作业、技能级别、相关笔记），每条标来源，推测标"（推测）"；笔记是否补充要**必问**用户；
 4. `npm run validate` → 汇报 3 条预习要点 + 课前要交的作业。
 
 ## 阶段 B · 课后更新（详细内容）
