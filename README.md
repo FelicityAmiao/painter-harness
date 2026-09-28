@@ -29,7 +29,8 @@
 painter-harness/
 ├── .github/
 │   ├── copilot-instructions.md   # 规则层：AI 维护本仓库的铁律与优先级规则
-│   └── prompts/                  # 4 个工作流：录课 / 记练习 / 调日程 / 周复盘
+│   ├── prompts/                  # 3 个工作流：记练习 / 调日程 / 周复盘
+│   └── skills/record-class/      # 录课工作流（skill）：课前预览 + 课后更新
 ├── painter-context/              # 领域规范（契约）
 │   ├── conventions.md            #   数据 schema、命名、日期格式的唯一权威定义
 │   └── skill-tree.md             #   技能树定义 + L0–L5 评定标准（唯一需人工维护的表）
@@ -61,7 +62,7 @@ painter-harness/
 | `npm run rollup` | 生成 `reports/dashboard.md`：里程碑进度条、技能树统计、周练习量 |
 | `npm run build` | 生成 `dist/index.html` 单文件站点，部署到服务器即可在线浏览所有 Markdown |
 
-日常使用：在 VS Code 中让 Copilot 执行 `.github/prompts/` 下的 prompt（录课、记练习、调日程、周复盘），或直接说明需求——`.github/copilot-instructions.md` 会自动约束 AI 按规范操作。
+日常使用：在 VS Code 中让 Copilot 执行 `.github/prompts/` 下的 prompt（记练习、调日程、周复盘）与 `/record-class` skill（课前说"要上课了"做预习骨架，课后说"下课了"补全记录），或直接说明需求——`.github/copilot-instructions.md` 会自动约束 AI 按规范操作。
 
 ## 站点预览
 

@@ -38,9 +38,9 @@
 
 `rollup` 只输出**候选建议**（基于练习次数与最近 result），级别升降由你结合练习反思判断，标准见 `painter-context/skill-tree.md` 的 L0–L5 评定表。每次升降都要在周复盘里写一句依据。
 
-## 常用工作流（prompt 文件）
+## 常用工作流（prompt / skill）
 
-- 录入一次上课 → `.github/prompts/record-class.prompt.md`
+- 录课两阶段（课前预览 / 课后更新） → `.github/skills/record-class/SKILL.md`（说"要上课了""下课了帮我记录"可自动触发，或 `/record-class`）
 - 记录一次练习 → `.github/prompts/log-practice.prompt.md`
 - 日程动态调整 → `.github/prompts/plan-week.prompt.md`
 - 周复盘（进度 + 技能树 + 笔记） → `.github/prompts/weekly-review.prompt.md`
