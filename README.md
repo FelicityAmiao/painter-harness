@@ -22,3 +22,43 @@
 4. 根据每个完成情况，不断为我更新插画、游戏美术的绘画技能树；
 5. 通过逐步进行，汇总出笔记本，AI agent能随时为我翻阅；
 6. 日期事项表，提供动态调整功能。
+
+## 项目结构
+
+```text
+painter-harness/
+├── .github/
+│   ├── copilot-instructions.md   # 规则层：AI 维护本仓库的铁律与优先级规则
+│   └── prompts/                  # 4 个工作流：录课 / 记练习 / 调日程 / 周复盘
+├── painter-context/              # 领域规范（契约）
+│   ├── conventions.md            #   数据 schema、命名、日期格式的唯一权威定义
+│   └── skill-tree.md             #   技能树定义 + L0–L5 评定标准（唯一需人工维护的表）
+├── data/                         # 数据层（唯一事实源）
+│   ├── courses/  sessions/       #   课程定义、每次上课记录
+│   ├── assignments/              #   作业（DDL 驱动优先级）
+│   ├── practice/  milestones/    #   练习记录、里程碑 checklist
+│   └── calendar.md               #   非作业类日期事项
+├── notes/                        # 笔记本：AI 汇总沉淀的知识点
+├── templates/                    # 录入模板（session/assignment/practice/milestone/note）
+├── harness/                      # 执行层：TypeScript CLI
+│   ├── cli.ts  lib.ts            #   入口与工具库
+│   ├── validate.ts               #   schema / 日期 / 跨文件引用 / 逾期 检查
+│   ├── rollup.ts                 #   仪表盘、日程、优先队列
+│   └── site.ts                   #   单文件静态站点构建
+├── reports/                      # rollup 生成的仪表盘（禁止手改）
+└── dist/index.html               # build 生成的单文件站点（部署用）
+```
+
+**三层 harness 分工**：规则层（AI 该怎么做的边界）→ 执行层（脚本保证机械一致性）→ 数据层（Markdown 事实源）。AI 负责判断与录入，脚本负责校验与汇总，谁也不能绕过 `npm run validate`。
+
+## 使用
+
+| 命令 | 用途 |
+| --- | --- |
+| `npm run validate` | 校验数据 schema、日期、跨文件引用（写入后必跑） |
+| `npm run agenda [天数]` | 未来日程（作业 DDL + calendar 合并，逾期置顶） |
+| `npm run next [条数]` | 作业优先级队列（DDL 驱动） |
+| `npm run rollup` | 生成 `reports/dashboard.md`：里程碑进度条、技能树统计、周练习量 |
+| `npm run build` | 生成 `dist/index.html` 单文件站点，部署到服务器即可在线浏览所有 Markdown |
+
+日常使用：在 VS Code 中让 Copilot 执行 `.github/prompts/` 下的 prompt（录课、记练习、调日程、周复盘），或直接说明需求——`.github/copilot-instructions.md` 会自动约束 AI 按规范操作。
