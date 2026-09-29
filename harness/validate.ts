@@ -16,6 +16,7 @@ interface Issue {
 }
 
 const COURSE_STATUS = ["planned", "active", "paused", "completed"];
+const COURSE_TRACK = ["foundation", "illustration", "game-art"];
 const ASSIGNMENT_STATUS = ["todo", "doing", "done", "dropped"];
 const PRIORITY = ["high", "medium", "low"];
 const RESULT = ["ok", "partial", "missed"];
@@ -35,6 +36,7 @@ export function runValidate(): number {
   const milestones = load("data/milestones");
 
   const courseIds = new Set(courses.map((c) => c.data.id));
+  const coursesById = new Map(courses.map((c) => [c.data.id, c]));
   const assignmentIds = new Set(assignments.map((a) => a.data.id));
   const milestoneIds = new Set(milestones.map((m) => m.data.id));
   const sessionIds = new Set(sessions.map((s) => s.data.id));
@@ -102,6 +104,7 @@ export function runValidate(): number {
     if (c.data.status !== undefined && c.data.status !== null && c.data.status !== "" && !COURSE_STATUS.includes(String(c.data.status))) {
       push("error", file, `status="${c.data.status}" 不在枚举 ${COURSE_STATUS.join("|")} 中`);
     }
+    enumOf(c, "track", COURSE_TRACK, true);
     date(c, "start_date", false);
     date(c, "end_date", false);
     skillsOf(c);
@@ -111,14 +114,24 @@ export function runValidate(): number {
     base(s, "上课记录");
     date(s, "date", true);
     ref(s, "course", courseIds, "课程", true);
+    const course = coursesById.get(s.data.course);
+    const sessionParts = s.rel.split("/");
+    if (sessionParts.length !== 4 || sessionParts[0] !== "data" || sessionParts[1] !== "sessions" || sessionParts[2] !== course?.data.track) {
+      push("error", s.rel, `session 必须位于关联课程 track 对应的目录：data/sessions/<track>/（当前课程 track=${course?.data.track ?? "缺失"}）`);
+    }
+    const sessionName = path.basename(s.rel);
+    const sessionNameMatch = sessionName.match(/^(\d{4}-\d{2}-\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/);
+    if (!sessionNameMatch) {
+      push("error", s.rel, "文件名必须为 YYYY-MM-DD-<ascii-topic-slug>.md，主题 slug 仅使用小写 ASCII 字母、数字和连字符");
+    } else {
+      if (!isValidIso(sessionNameMatch[1])) push("error", s.rel, `文件名日期不是合法 YYYY-MM-DD：${sessionNameMatch[1]}`);
+      if (s.data.date !== sessionNameMatch[1]) push("error", s.rel, `文件名日期 ${sessionNameMatch[1]} 必须与 date 字段 ${s.data.date ?? "缺失"} 一致`);
+    }
     ref(s, "assignment", assignmentIds, "作业");
     skillsOf(s);
     if (typeof s.data.homework_due === "string" && s.data.homework_due) date(s, "homework_due", false);
     if (s.data.duration_min !== undefined && s.data.duration_min !== null && s.data.duration_min !== "" && !Number.isFinite(Number(s.data.duration_min))) {
       push("error", s.rel, "duration_min 必须是数字");
-    }
-    if (!/^\d{4}-\d{2}-\d{2}-/.test(path.basename(s.rel))) {
-      push("warning", s.rel, "文件名建议为 YYYY-MM-DD-<course-id>.md");
     }
   }
 

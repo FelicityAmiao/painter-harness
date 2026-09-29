@@ -30,5 +30,5 @@ created: 2026-09-29
 
 ## 关联
 
-- 上课记录：`data/sessions/2026-09-30-qingweike-anime.md`（选修软件课 · iPad - Procreate）
+- 上课记录：`data/sessions/illustration/2026-09-30-procreate-software.md`（选修软件课 · iPad - Procreate）
 - 课程：`data/courses/qingweike-anime.md`

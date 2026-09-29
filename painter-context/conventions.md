@@ -7,7 +7,7 @@
 | 目录 | 内容 | 命名 |
 | --- | --- | --- |
 | `data/courses/` | 课程定义（长期存在） | `<course-id>.md` |
-| `data/sessions/` | 每次上课记录 | `YYYY-MM-DD-<course-id>.md` |
+| `data/sessions/<track>/` | 每次上课记录，按课程学习方向分类 | `YYYY-MM-DD-<ascii-topic-slug>.md` |
 | `data/assignments/` | 作业/待交付（DDL 驱动） | `as-NNN-<slug>.md` |
 | `data/practice/` | 每次练习记录 | `YYYY-MM-DD-<slug>.md` |
 | `data/milestones/` | 里程碑（checklist + 进度条） | `ms-<slug>.md` |
@@ -32,11 +32,11 @@
 | `id`, `title` | ✅ | |
 | `provider` | | 老师/平台名 |
 | `type` | | `1v1` \| `online` |
-| `track` | | `foundation` \| `illustration` \| `game-art` |
+| `track` | ✅ | `foundation` \| `illustration` \| `game-art`；决定 session 分类目录，不使用 `type` 或 `provider` 分类 |
 | `start_date`, `end_date` | | ISO，未知留空 |
 | `status` | | `planned` \| `active` \| `paused` \| `completed`（默认 active） |
 
-正文可含 `## 预习记录` 小节（按 `### YYYY-MM-DD` 分日期小节，记录课前预习与课后回填要点）——仅描述正文，不进 frontmatter。
+课程文件只保存课程级资料；每次课的预习与课后记录统一写在对应 session，不在课程文件中建立单次课预习记录。
 
 ### session（`data/sessions/`）
 
@@ -48,9 +48,11 @@
 | `assignment` | | 对应 assignment 的 id（有 DDL 的作业应建 assignment 并回链） |
 | `skills` | | 技能 id 数组，如 `[foundation/line]` |
 
+路径：`data/sessions/<关联课程 track>/YYYY-MM-DD-<ascii-topic-slug>.md`。主题 slug 使用小写 ASCII 字母、数字和连字符；中文主题保留在正文。目录必须与关联课程的 `track` 一致，文件名日期必须与 `date` 一致，`id` 必须等于文件名（不含 `.md`）。`track` 必填且仅允许 `foundation`、`illustration`、`game-art`；`type` 和 `provider` 不参与分类。
+
 正文小节：`## 预习`（课前可选，见下） `## 课堂内容` `## 疑问` `## 收获`。
 
-- **两阶段录课**：课前可先建骨架文件（frontmatter 只填事实），正文顶部加状态标记行 `> 状态：课前预览 · 待上课后补全`，`## 预习` 写有来源的粗略浏览；课后原地升级，状态标记改为 `> 状态：已完成`，并在 `## 预习` 末尾追加 `### 对照`（命中 / 没讲到 / 超预期）。状态标记与 `## 预习` 都只在正文，validate 只校验 frontmatter。
+- **两阶段录课**：课前可先建骨架文件（frontmatter 只填事实），正文顶部加状态标记行 `> 状态：课前预览 · 待上课后补全`，`## 预习` 写有来源的粗略浏览；课前与课后内容都写入同一 session。课后原地升级，状态标记改为 `> 状态：已完成`，并在 `## 预习` 末尾追加 `### 对照`（命中 / 没讲到 / 超预期）。单次课内容不回填 course。状态标记与 `## 预习` 都只在正文，validate 只校验 frontmatter。
 
 ### assignment（`data/assignments/`）
 

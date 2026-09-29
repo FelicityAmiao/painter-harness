@@ -16,15 +16,15 @@
 
 ## 3. 建 session 骨架
 
-- 路径：`data/sessions/YYYY-MM-DD-<course-id>.md`（已存在则进入阶段 B，不要重建）。
+- 路径：`data/sessions/<课程 track>/YYYY-MM-DD-<ascii-topic-slug>.md`（主题 slug 使用小写 ASCII 字母、数字和连字符；已存在则进入阶段 B，不要重建）。`track` 取自关联课程，不使用 `type` 或 `provider` 分类。
 - 用 `templates/session.md` 结构：
   - frontmatter 只填**事实**：`id`（= 文件名去 `.md`）、`date`、`course` 必填；`skills` 能从大纲预判就填，否则 `[]`；`instructor`/`homework` 等未知留空。
   - 正文顶部加状态标记行：`> 状态：课前预览 · 待上课后补全`，其下补一行 `> 上课时刻：HH:MM（用户提供）`。
   - `## 课堂内容` `## 疑问` `## 收获` 留空——等课后填。
 
-## 4. 写预习（双写：主写 course，session 留精简版）
+## 4. 写预习（单写 session）
 
-**主写入点：`data/courses/<id>.md` 正文**——新增（或追加到已有）`## 预习记录` 小节，按 `### YYYY-MM-DD` 追加本次的脉络图 + 速览表；session 的 `## 预习` 只留精简版（或一句"详见 course 预习记录"），课后 `### 对照` 仍写在 session。
+**主写入点：本次 session 的 `## 预习`**——写入本次的脉络图 + 速览表。课程文件只保存课程级资料；课前和课后记录都留在同一 session，课后 `### 对照` 也写在 session。
 
 先按顺序收集素材，能查到什么写什么，查不到就跳过或问用户：
 
@@ -34,7 +34,7 @@
 4. **涉及技能现状**：对照 `painter-context/skill-tree.md`，写涉及技能 id 及当前级别。预习发现技能树缺口时，课后按 post-checklist 的技能询问步骤处理。
 5. **相关笔记（必问）**：先列出 `notes/` 里已有的相关页面链接，然后**停下来问用户**："课前是否要补充/新建笔记？"——用户说要，就按 `templates/note.md` 写入（或追加到已有笔记）后再继续。
 
-素材收齐后，组织成固定两块，写入 course 的 `### YYYY-MM-DD` 小节：
+素材收齐后，组织成固定两块，写入 session 的 `## 预习`：
 
 **块 1 · 脉络图**（mermaid `mindmap` 或 `flowchart LR`）：本课在课程大纲中的位置 → 本次主题 → 关联技能（标级别）→ 上次遗留疑问：
 
