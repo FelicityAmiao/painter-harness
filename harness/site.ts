@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import { marked } from "marked";
+import { marked, type Tokens } from "marked";
 import { ROOT, toPosix, walkMd } from "./lib";
 
 /** 站点收录的目录（harness 本身、模板、配置不上站） */
@@ -12,6 +12,70 @@ const DIRS = ["painter-context", "data", "notes", "reports"];
 interface Entry {
   p: string;
   t: string;
+}
+
+export function resolveMarkdownHref(
+  from: string,
+  href: string,
+  content: Record<string, unknown>,
+): string | null {
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(href);
+  } catch {
+    decoded = href;
+  }
+  decoded = decoded.split(/[?#]/, 1)[0].replace(/\\/g, "/");
+  const segments = decoded.charAt(0) === "/" ? [] : from.split("/").slice(0, -1);
+  decoded.split("/").forEach((part) => {
+    if (!part || part === ".") return;
+    if (part === "..") segments.pop();
+    else segments.push(part);
+  });
+  const target = segments.join("/");
+  return content[target] ? target : null;
+}
+
+function headingSlugger() {
+  const used = new Set<string>();
+  const nextByBase = new Map<string, number>();
+
+  return (heading: string): string => {
+    const base =
+      heading
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}_\s-]/gu, "")
+        .trim()
+        .replace(/\s+/g, "-") || "section";
+    let index = nextByBase.get(base) ?? 0;
+    let slug = index === 0 ? base : `${base}-${index}`;
+    while (used.has(slug)) {
+      index += 1;
+      slug = `${base}-${index}`;
+    }
+    nextByBase.set(base, index + 1);
+    used.add(slug);
+    return slug;
+  };
+}
+
+function headingText(tokens: Tokens.Generic[]): string {
+  return tokens
+    .map((token) => {
+      const value = token as Tokens.Generic & { text?: string; tokens?: Tokens.Generic[] };
+      return value.tokens ? headingText(value.tokens) : value.text ?? "";
+    })
+    .join("");
+}
+
+export function renderMarkdown(markdown: string): string {
+  const slug = headingSlugger();
+  const renderer = new marked.Renderer();
+  renderer.heading = function ({ tokens, depth }: Tokens.Heading): string {
+    const id = slug(headingText(tokens));
+    return `<h${depth} id="${id}">${this.parser.parseInline(tokens)}</h${depth}>\n`;
+  };
+  return marked.parse(markdown, { async: false, renderer }) as string;
 }
 
 function embedMarkdownImages(markdown: string, sourcePath: string): string {
@@ -75,7 +139,7 @@ export function buildSite(): void {
     }
     if (rel === "README.md") title = "总览 · painter-harness";
     const markdown = embedMarkdownImages(parsed.content, rel);
-    content[rel] = marked.parse(markdown, { async: false }) as string;
+    content[rel] = renderMarkdown(markdown);
     manifest.push({ p: rel, t: title });
   };
 
@@ -98,7 +162,10 @@ export function buildSite(): void {
     .replace(/\u2028/g, "\\u2028")
     .replace(/\u2029/g, "\\u2029");
 
-  const html = TEMPLATE.replace("/*__DATA__*/", json);
+  const html = TEMPLATE.replace("/*__DATA__*/", json).replace(
+    "/*__RESOLVER__*/",
+    resolveMarkdownHref.toString(),
+  );
   const outDir = path.join(ROOT, "dist");
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, "index.html"), html, "utf8");
@@ -245,26 +312,37 @@ function highlight(p) {
   });
 }
 
-function resolveHref(href) {
-  var c = href.replace(/^(\\.\\/)+/, '').replace(/(^|\\/)(\\.\\.\\/)+/g, '$1');
-  if (D.content[c]) return c;
-  var keys = Object.keys(D.content);
-  for (var i = 0; i < keys.length; i++) {
-    if (keys[i] === c || keys[i].endsWith('/' + c)) return keys[i];
-  }
-  return null;
+var currentPath = '';
+
+function decodePart(value) {
+  try { return decodeURIComponent(value); } catch (_) { return value; }
 }
 
-function show(p, push) {
+var resolveHref = /*__RESOLVER__*/;
+
+function readRoute() {
+  var parts = location.hash.slice(1).split('#');
+  return { path: decodePart(parts[0]), anchor: parts.length > 1 ? decodePart(parts.slice(1).join('#')) : '' };
+}
+
+function show(p, push, anchor) {
   var html = D.content[p];
   if (!html) return;
+  currentPath = p;
   viewEl.innerHTML = html;
   crumbEl.textContent = (titleMap[p] || p) + '  ·  ' + p;
-  if (push !== false && location.hash !== '#' + encodeURIComponent(p)) {
-    history.replaceState(null, '', '#' + encodeURIComponent(p));
+  var route = '#' + encodeURIComponent(p) + (anchor ? '#' + encodeURIComponent(anchor) : '');
+  if (push !== false && location.hash !== route) {
+    history.replaceState(null, '', route);
   }
   highlight(p);
   document.querySelector('main').scrollTop = 0;
+  if (anchor) {
+    requestAnimationFrame(function () {
+      var target = document.getElementById(anchor);
+      if (target) target.scrollIntoView();
+    });
+  }
 }
 
 viewEl.addEventListener('click', function (e) {
@@ -273,15 +351,20 @@ viewEl.addEventListener('click', function (e) {
   var a = e.target.closest ? e.target.closest('a') : null;
   if (!a) return;
   var href = a.getAttribute('href') || '';
-  if (/\\.md(#[^#]*)?$/.test(href) || href.charAt(0) === '#') {
-    var target = href.charAt(0) === '#' ? decodeURIComponent(href.slice(1)) : resolveHref(href.replace(/#.*$/, ''));
-    if (target) { e.preventDefault(); show(target); }
+  if (href.charAt(0) === '#') {
+    e.preventDefault();
+    show(currentPath, true, decodePart(href.slice(1)));
+  } else if (/\.md(?:[?#].*)?$/i.test(href)) {
+    var parts = href.split('#');
+    var target = resolveHref(currentPath, parts[0], D.content);
+    var anchor = parts.length > 1 ? decodePart(parts.slice(1).join('#')) : '';
+    if (target) { e.preventDefault(); show(target, true, anchor); }
   } else if (/^https?:/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
 });
 
 searchEl.addEventListener('input', function () {
   var q = searchEl.value.trim().toLowerCase();
-  if (!q) { renderTree(); highlight(decodeURIComponent(location.hash.slice(1))); return; }
+  if (!q) { renderTree(); highlight(currentPath); return; }
   treeEl.innerHTML = '';
   D.manifest.filter(function (e) {
     return e.t.toLowerCase().indexOf(q) >= 0 || e.p.toLowerCase().indexOf(q) >= 0;
@@ -289,13 +372,13 @@ searchEl.addEventListener('input', function () {
 });
 
 window.addEventListener('hashchange', function () {
-  var p = decodeURIComponent(location.hash.slice(1));
-  if (D.content[p]) show(p, false);
+  var route = readRoute();
+  if (D.content[route.path]) show(route.path, false, route.anchor);
 });
 
 renderTree();
-var initial = decodeURIComponent(location.hash.slice(1));
-show(D.content[initial] ? initial : D.manifest[0].p, false);
+var initial = readRoute();
+show(D.content[initial.path] ? initial.path : D.manifest[0].p, false, initial.anchor);
 </script>
 </body>
 </html>

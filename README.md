@@ -35,10 +35,13 @@ painter-harness/
 │   ├── conventions.md            #   数据 schema、命名、日期格式的唯一权威定义
 │   └── skill-tree.md             #   技能树定义 + L0–L5 评定标准（唯一需人工维护的表）
 ├── data/                         # 数据层（唯一事实源）
-│   ├── courses/  sessions/       #   课程定义、按 track 分类的每次上课记录
-│   ├── assignments/              #   作业（DDL 驱动优先级）
-│   ├── practice/  milestones/    #   练习记录、里程碑 checklist
-│   └── calendar.md               #   非作业类日期事项
+│   ├── courses/                  #   课程定义
+│   ├── sessions/                 #   按 track 分类的上课记录
+│   ├── assignments/              #   作业（真实 DDL，硬截止）
+│   ├── practice/                 #   练习记录（已发生事实）
+│   ├── milestones/               #   里程碑 checklist
+│   ├── calendar.md               #   非作业类日期事项
+│   └── README.md                 #   数据目录说明与事实/计划边界
 ├── notes/                        # 笔记本：AI 汇总沉淀的知识点
 ├── templates/                    # 录入模板（session/assignment/practice/milestone/note）
 ├── harness/                      # 执行层：TypeScript CLI
@@ -49,6 +52,8 @@ painter-harness/
 ├── reports/                      # rollup 生成的仪表盘（禁止手改）
 └── dist/index.html               # build 生成的单文件站点（部署用）
 ```
+
+**事实与计划的分层**：`data/` 是唯一事实源；`reports/` 只生成；课程大纲、平台说明、聊天记录、草稿和其他参考材料都只是参考，不等于事实。真实 DDL 放在 `data/assignments/` 的 `due` 字段，非作业类日期写在 `data/calendar.md`，计划日期/排期日期是软安排，不能混同为硬截止。
 
 **三层 harness 分工**：规则层（AI 该怎么做的边界）→ 执行层（脚本保证机械一致性）→ 数据层（Markdown 事实源）。AI 负责判断与录入，脚本负责校验与汇总，谁也不能绕过 `npm run validate`。
 

@@ -16,4 +16,4 @@ created: YYYY-MM-DD
 
 ## 关联
 
-- [[相关笔记]]
+- [相关笔记](../notes/相关笔记.md)

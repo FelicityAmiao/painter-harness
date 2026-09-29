@@ -42,7 +42,7 @@ export function walkMd(relDir: string, skip: Set<string> = DEFAULT_SKIP): string
       const abs = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         if (!skip.has(entry.name)) stack.push(abs);
-      } else if (entry.name.endsWith(".md")) {
+      } else if (entry.name.endsWith(".md") && entry.name !== "README.md") {
         out.push(abs);
       }
     }

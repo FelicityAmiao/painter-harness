@@ -10,7 +10,8 @@
     "agenda": "tsx harness/cli.ts agenda",
     "next": "tsx harness/cli.ts next",
     "build": "tsx harness/cli.ts build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test harness/site.test.ts"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

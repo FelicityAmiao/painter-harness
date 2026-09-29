@@ -53,7 +53,7 @@ flowchart LR
 | 带着问题去 | … | 上次 session 的疑问 / 收获 |
 | 课前作业与 DDL | …（倒计时 X 天） | `npm run next` |
 | 涉及技能现状 | `foundation/line` L2 | skill-tree |
-| 相关笔记 | [[note-slug]] | `notes/` |
+| 相关笔记 | [note-slug](../../../../notes/note-slug.md) | `notes/` |
 
 铁律不变：每条**注明来源**，推测标"（推测）"；写不出来源就问用户，不要编造。
 

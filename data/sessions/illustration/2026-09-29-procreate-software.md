@@ -37,7 +37,7 @@ flowchart LR
 | 带着问题去 | 无往期疑问（首次录入，暂无可带问题） | 上次 session 的疑问 / 收获 |
 | 课前作业与 DDL | `npm run next` 队列为空，无待交作业 | `npm run next` |
 | 涉及技能现状 | 软件操作类暂无对应技能 id；近似 `game-art/pipeline`（板绘工作流，含图层规范） L0 | `painter-context/skill-tree.md` |
-| 相关笔记 | [[procreate-learning-goals]]（课前新建：课程技能点预期与目标） | `notes/` |
+| 相关笔记 | [Procreate 课程技能点预期与目标](../../../notes/procreate-learning-goals.md)（课前新建） | `notes/` |
 
 ### 对照
 
@@ -57,4 +57,4 @@ flowchart LR
 
 ## 收获
 
-- 睡眠不足、当前困倦与本次学习感受的记录见 [[learning-fatigue]]；相关因素暂作观察，不据此判断原因。
+- 睡眠不足、当前困倦与本次学习感受的记录见 [学习时的疲劳观察](../../../notes/learning-fatigue.md)；相关因素暂作观察，不据此判断原因。
