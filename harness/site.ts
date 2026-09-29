@@ -14,6 +14,51 @@ interface Entry {
   t: string;
 }
 
+function embedMarkdownImages(markdown: string, sourcePath: string): string {
+  const mimeTypes: Record<string, string> = {
+    ".avif": "image/avif",
+    ".bmp": "image/bmp",
+    ".gif": "image/gif",
+    ".jpeg": "image/jpeg",
+    ".jpg": "image/jpeg",
+    ".png": "image/png",
+    ".svg": "image/svg+xml",
+    ".webp": "image/webp",
+  };
+  const sourceDir = path.dirname(path.join(ROOT, sourcePath));
+
+  return markdown.replace(
+    /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g,
+    (image, alt: string, href: string, title?: string) => {
+      if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(href)) return image;
+
+      let imagePath: string;
+      try {
+        imagePath = decodeURIComponent(href).split(/[?#]/, 1)[0];
+      } catch {
+        return image;
+      }
+
+      const abs = path.resolve(sourceDir, imagePath);
+      const relative = path.relative(ROOT, abs);
+      if (relative.startsWith("..") || path.isAbsolute(relative) || !fs.existsSync(abs)) {
+        return image;
+      }
+
+      const mimeType = mimeTypes[path.extname(abs).toLowerCase()];
+      if (!mimeType) return image;
+
+      const data = fs.readFileSync(abs).toString("base64");
+      const dataUri = `data:${mimeType};base64,${data}`;
+      const escapedAlt = alt.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+      const titleAttribute = title
+        ? ` title="${title.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;")}"`
+        : "";
+      return `<img src="${dataUri}" alt="${escapedAlt}"${titleAttribute}>`;
+    },
+  );
+}
+
 export function buildSite(): void {
   const content: Record<string, string> = {};
   const manifest: Entry[] = [];
@@ -29,7 +74,8 @@ export function buildSite(): void {
       title = m ? m[1].trim() : path.basename(rel, ".md");
     }
     if (rel === "README.md") title = "总览 · painter-harness";
-    content[rel] = marked.parse(parsed.content, { async: false }) as string;
+    const markdown = embedMarkdownImages(parsed.content, rel);
+    content[rel] = marked.parse(markdown, { async: false }) as string;
     manifest.push({ p: rel, t: title });
   };
 
@@ -118,7 +164,7 @@ main{flex:1;overflow-y:auto}
 #view li{margin:.25em 0}
 #view hr{border:0;border-top:1px solid var(--line);margin:2em 0}
 #view input[type=checkbox]{accent-color:var(--accent);margin-right:6px}
-#view img{max-width:100%;border-radius:10px}
+#view img{max-width:100%;border-radius:10px;cursor:zoom-in}
 .empty{color:var(--muted);padding:60px 0;text-align:center}
 @media (max-width:820px){#app{flex-direction:column}aside{width:100%;min-width:0;max-height:40vh}
   #view{padding:20px}}
@@ -222,6 +268,8 @@ function show(p, push) {
 }
 
 viewEl.addEventListener('click', function (e) {
+  var image = e.target.closest ? e.target.closest('img') : null;
+  if (image) { window.open(image.currentSrc || image.src, '_blank', 'noopener'); return; }
   var a = e.target.closest ? e.target.closest('a') : null;
   if (!a) return;
   var href = a.getAttribute('href') || '';

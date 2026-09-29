@@ -28,7 +28,9 @@ status: active
 | 古风插画 | 融合传统文化意象、诗词意境、细腻线条与古典配色 |
 | 漫画创作 | 结合图像、对白和分镜，通过画面顺序讲述故事 |
 
-来源：`assets/course-anime.png`。
+课程风格参考图：
+
+![轻微课二次元插画课程风格参考](assets/course-anime.png)
 
 ## 课程大纲
 
@@ -69,5 +71,9 @@ status: active
 | 主题动漫插画创作 | 45 天 | 主题插画设计思路；商业常用构图；主题插画草图；色彩应用拓展；色彩氛围图应用；插画草图调整；吸塑型画与调整 |
 | 创作篇：创作成果分享 | 未标注 | 阶段作品展示与成果分享 |
 
-课程路线图还标出了练习任务、辅助任务和阶段复习安排，详见 `assets/course-anime-detail.png` 与 `assets/course-anime-milestone.png`。图片未标出的精确课次、日期和作业 DDL 暂不推定。
+课程路线图还标出了练习任务、辅助任务和阶段复习安排，具体内容见下图。图片未标出的精确课次、日期和作业 DDL 暂不推定。
+
+![轻微课二次元插画课程路线图详细内容](assets/course-anime-detail.png)
+
+![轻微课二次元插画课程阶段里程碑](assets/course-anime-milestone.png)
 

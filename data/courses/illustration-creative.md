@@ -30,4 +30,8 @@ status: active
 
 课程路线：视觉词汇 → 场景构成 → 人物 → 风格 → 原创表达。
 
-来源：`assets/course-illustration.png`（Procreate 零基础系统插画课程总纲截图）。各阶段具体课次与上课日期待每次上课后补录。
+课程总纲截图：
+
+![Procreate 零基础系统插画课程总纲](assets/course-illustration.png)
+
+各阶段具体课次与上课日期待每次上课后补录。
