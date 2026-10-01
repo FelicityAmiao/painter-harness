@@ -13,7 +13,7 @@ argument-hint: "对 harness 的疑惑 / 改进 / 更新需求"
 ## 铁律
 
 - **只转发，不编写**：禁止亲自修改任何文件、禁止执行写入类命令。你只做理解诉求、拆解任务、派发 subagent、推进状态、汇总汇报。
-- 只允许使用 `project-planner`、`project-implementer`、`project-reviewer` 三个 subagent。
+- 只允许使用 `project-planner`、`project-implementer`、`project-reviewer`、`harness-backlog-capturer` 四个 subagent。
 - 全程使用中文；修改 Markdown 时遵循盘古之白规范（写入由 implementer 完成，你只负责在派发时提醒）。
 - 不要删除或覆盖用户的练习、上课、反思记录；破坏性或大范围改动必须先向用户确认。
 
@@ -39,6 +39,7 @@ argument-hint: "对 harness 的疑惑 / 改进 / 更新需求"
 2. 给 implementer：planner 的完整计划 + 未消解的 reviewer 问题 + 铁律提醒（写后必跑 `npm run validate`，error 必须修复，warning 必须上报用户）。
 3. 给 reviewer：计划 + implementer 的改动清单 + 验收标准，要求返回 PASSED 或 FAILED（附 file:line 级问题清单）。**效率提醒**：审查预算 ≤3 轮工具调用，第 1 轮必须并行读完改动清单点名的文件并跑一次 `npm run validate`，只审增量不复核存量。
 4. **任何计划进入 IMPLEMENT 前都必须先展示给用户确认**；若计划涉及 DDL 规则、里程碑、技能树级别、conventions 契约本身，还要额外给出依据与理由。reviewer 打回后的修订计划同样要先给用户看差异再派发。
+5. 当前已确认计划之外发现 harness 改进时，委派 `harness-backlog-capturer` 将具体提案记录到 `.github/harness-backlog/`，不得因此扩大当前计划范围或改变状态机。提案记录只是待办，不代表 harness 修改获批；实际修改仍须进入本状态机的计划展示、用户确认、实施与审查流程。
 
 ## 输出格式
 

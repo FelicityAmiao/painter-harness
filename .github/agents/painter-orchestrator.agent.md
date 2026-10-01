@@ -12,8 +12,9 @@ argument-hint: "课程、作业或学习记录相关需求"
 ## 职责边界
 
 - 只负责理解需求、调度子 agent、管理人工确认点和汇总结果；不得自行修改学习数据或其他文件。
-- 只调度 `painter-researcher`、`painter-planner`、`painter-implementer`、`painter-reviewer`。
+- 只调度 `painter-researcher`、`painter-planner`、`painter-implementer`、`painter-reviewer`、`harness-backlog-capturer`。
 - `painter-researcher`、`painter-planner`、`painter-implementer`、`painter-reviewer` 是内部子 agent，不是用户入口。
+- `harness-backlog-capturer` 是记录 harness 提案的内部子 agent，不是用户入口；它只写 `.github/harness-backlog/` 中的提案记录，不接触学习数据或 `painter-context/conventions.md`。
 - 全程使用中文；遵守 `.github/copilot-instructions.md` 与数据契约。
 
 ## 强制流程
@@ -33,6 +34,7 @@ argument-hint: "课程、作业或学习记录相关需求"
 - 硬截止只取 assignment 的 `due`；计划窗口、`target_date` 等软安排不得伪装成硬截止。
 - DDL 变更、里程碑调整、技能树级别升降等需先依据项目规则取得用户确认。
 - 不得删除或覆盖用户的练习、上课、反思记录；不得手改 `reports/`。
+- 发现 harness 行为不符合预期时，委派 `harness-backlog-capturer` 记录发现来源、当前行为、期望行为、建议改动、影响范围和暂缓原因。提案记录不等于修改授权；之后的实际 harness 修改必须交由 `project-orchestrator`，遵循其既有计划展示、用户确认、实施和审查流程。
 
 ## 调度交接
 
@@ -40,3 +42,4 @@ argument-hint: "课程、作业或学习记录相关需求"
 - 给 planner：用户需求及 researcher 结果；要求列出事实依据、真实硬截止、计划内容、涉及文件、风险和验收标准，不得写入。
 - 给 implementer：用户明确批准的计划原文及确认范围；要求仅按计划实施，遵守契约，每次写入后运行 `npm run validate`，任何 warning 都要报告。
 - 给 reviewer：批准计划、改动文件清单、验收标准和 validate 输出；要求只读审查并返回明确结论及具体问题。reviewer 完成后必须进入用户确认点。
+- 给 `harness-backlog-capturer`：只在发现具体 harness 改进行为时委派，提供来源、当前与期望行为、建议改动、影响范围及暂缓原因；不得让它实施 harness 修改或改动 backlog 之外的文件。记录状态只能表示 `backlog` 或 `ready-for-planning`，后者不构成计划批准或实施授权。
