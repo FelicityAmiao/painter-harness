@@ -1,5 +1,11 @@
 import path from "node:path";
 import {
+  DIR_ASSIGNMENTS,
+  DIR_COURSES,
+  DIR_MILESTONES,
+  DIR_PLANS,
+  DIR_PRACTICE,
+  DIR_SESSIONS,
   Doc,
   isValidIso,
   load,
@@ -30,12 +36,12 @@ export function runValidate(): number {
   const push = (level: Level, file: string, msg: string) => issues.push({ level, file, msg });
 
   const skillIds = new Set(loadSkills().map((s) => s.id));
-  const courses = load("data/courses");
-  const sessions = load("data/sessions");
-  const assignments = load("data/assignments");
-  const plans = load("data/plans");
-  const practices = load("data/practice");
-  const milestones = load("data/milestones");
+  const courses = load(DIR_COURSES);
+  const sessions = load(DIR_SESSIONS);
+  const assignments = load(DIR_ASSIGNMENTS);
+  const plans = load(DIR_PLANS);
+  const practices = load(DIR_PRACTICE);
+  const milestones = load(DIR_MILESTONES);
 
   const courseIds = new Set(courses.map((c) => c.data.id));
   const coursesById = new Map(courses.map((c) => [c.data.id, c]));
@@ -97,7 +103,21 @@ export function runValidate(): number {
     if (typeof v !== "string" || !ids.has(v)) push("error", doc.rel, `${field}="${v}" 指向不存在的${what}`);
   };
 
-  if (courses.length === 0) push("warning", "data/courses/", "还没有任何课程");
+  const refList = (doc: Doc, field: string, ids: Set<string>, what: string) => {
+    const v = doc.data[field];
+    if (v === undefined || v === null) return;
+    if (!Array.isArray(v)) {
+      push("error", doc.rel, `${field} 必须是数组`);
+      return;
+    }
+    for (const raw of v) {
+      const id = typeof raw === "string" ? raw.trim() : "";
+      if (!id) push("error", doc.rel, `${field} 中存在空项`);
+      else if (!ids.has(id)) push("error", doc.rel, `${field} 中的 "${id}" 指向不存在的${what}`);
+    }
+  };
+
+  if (courses.length === 0) push("warning", `${DIR_COURSES}/`, "还没有任何课程");
 
   for (const c of courses) {
     const file = c.rel;
@@ -118,8 +138,10 @@ export function runValidate(): number {
     ref(s, "course", courseIds, "课程", true);
     const course = coursesById.get(s.data.course);
     const sessionParts = s.rel.split("/");
-    if (sessionParts.length !== 4 || sessionParts[0] !== "data" || sessionParts[1] !== "sessions" || sessionParts[2] !== course?.data.track) {
-      push("error", s.rel, `session 必须位于关联课程 track 对应的目录：data/sessions/<track>/（当前课程 track=${course?.data.track ?? "缺失"}）`);
+    const sessionDir = sessionParts.slice(0, -1).join("/");
+    const expectedDir = `${DIR_SESSIONS}/${course?.data.track}`;
+    if (sessionParts.length !== 4 || sessionDir !== expectedDir) {
+      push("error", s.rel, `session 必须位于关联课程 track 对应的目录：${DIR_SESSIONS}/<track>/（当前课程 track=${course?.data.track ?? "缺失"}）`);
     }
     const sessionName = path.basename(s.rel);
     const sessionNameMatch = sessionName.match(/^(\d{4}-\d{2}-\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/);
@@ -194,15 +216,8 @@ export function runValidate(): number {
     date(m, "target_date", false);
     enumOf(m, "status", MILESTONE_STATUS, false, "active");
     skillsOf(m);
-  }
-
-  const calFile = load("data").find((d) => d.rel === "data/calendar.md");
-  if (calFile) {
-    for (const [i, line] of calFile.content.split(/\r?\n/).entries()) {
-      if (line.startsWith("- ") && !/^- \d{4}-\d{2}-\d{2} · .+$/.test(line)) {
-        push("warning", `data/calendar.md`, `第 ${i + 1} 行不符合 "- YYYY-MM-DD · 事项" 格式`);
-      }
-    }
+    refList(m, "related_sessions", sessionIds, "上课记录");
+    refList(m, "related_courses", courseIds, "课程");
   }
 
   /* ---- 输出 ---- */

@@ -26,5 +26,5 @@ applyTo: "**/*.md"
 
 ## 适用动作
 
-- 新建或修改任何 `.md` 文件（含 `data/`、`notes/`、`reports/`、`painter-context/`、`templates/`）时，写出的中文内容必须已符合本规范。
+- 新建或修改任何 `.md` 文件（含 `painter-context/` 及其 `notes/`、`reports/`、`templates/` 子目录）时，写出的中文内容必须已符合本规范。
 - 修改既有文件时，顺手修正改动行附近的违规空格，不必一次性全仓清理。

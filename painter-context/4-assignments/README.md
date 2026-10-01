@@ -1,4 +1,4 @@
-# data/assignments/
+# 4-assignments/
 
 这里存放“有硬截止”的作业记录，真正的交付任务与 DDL 都写在这里。
 
@@ -9,6 +9,5 @@
 
 原则：
 
-- `data/assignments/` 是硬截止事实源
-- `data/calendar.md` 只记非作业事项
+- `4-assignments/` 是硬截止事实源
 - 计划日期、排期日期属于软安排，不等于正式 DDL

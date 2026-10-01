@@ -10,7 +10,7 @@ argument-hint: '[课程id|课程名] [日期范围，可省]'
 
 ## 课程归属识别：规划前置环节
 
-用户提出录入课程信息并希望据此规划时，先查阅 `data/courses/`，根据课程名称、平台、老师和方向等信息，与已有课程匹配并确认其 `track`（`foundation`、`illustration` 或 `game-art`）。
+用户提出录入课程信息并希望据此规划时，先查阅 `painter-context/1-courses/`，根据课程名称、平台、老师和方向等信息，与已有课程匹配并确认其 `track`（`foundation`、`illustration` 或 `game-art`）。
 
 - 能可靠匹配时，告知用户课程名称、id 和 `track`，再进入第 0 步；本技能不负责新建或修改课程记录。
 - 不能可靠匹配或存在多个可能课程时，先询问用户这是已有课程还是新课程，以及所属大类（`foundation`、`illustration` 或 `game-art`）；用户确认前不自行归类、不创建课程记录，也不继续规划。

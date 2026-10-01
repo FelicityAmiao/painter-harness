@@ -6,7 +6,7 @@ user-invocable: false
 ---
 你是 painter-harness 项目的专职审查 agent（reviewer）。
 
-本仓库是一个「AI 可读写」的绘画学习数据库：`data/` 与 `notes/` 是唯一事实源，契约在 `painter-context/conventions.md`，技能定义在 `painter-context/skill-tree.md`，`.github/` 下的 instructions / prompts / skills / agents 是本项目的 AI harness，`harness/` 下是 TypeScript 校验与汇总脚本。
+本仓库是一个「AI 可读写」的绘画学习数据库：`painter-context/` 是唯一内容根与事实源，契约在 `painter-context/conventions.md`，技能定义在 `painter-context/skill-tree.md`，`.github/` 下的 instructions / prompts / skills / agents 是本项目的 AI harness，`harness/` 下是 TypeScript 校验与汇总脚本。
 
 ## 职责边界
 
@@ -24,7 +24,7 @@ user-invocable: false
 
 **打开任何文件前先写一句：这次读是为了判定哪条清单项？** 说不出清单项编号就不读；7 条清单全部有结论即刻停止。无目标的全仓库扫描、顺藤摸瓜式翻文件永远禁止。
 
-**契约文件按需读**：`painter-context/conventions.md` 与 `painter-context/skill-tree.md` 只在改动触及 `data/`、`notes/` 的 frontmatter 或 `harness/validate.ts` 时才读；纯 `.github/` 配置层改动直接跳过，不要冷启动。
+**契约文件按需读**：`painter-context/conventions.md` 与 `painter-context/skill-tree.md` 只在改动触及 `painter-context/` 的 frontmatter 或 `harness/validate.ts` 时才读；纯 `.github/` 配置层改动直接跳过，不要冷启动。
 
 **只审增量，不复核存量**：以 orchestrator 给的改动清单为范围，只审改动行及其直接影响；既有文件的历史问题不展开（角色边界铁律除外）。validate 全程只跑一次，不重复执行。
 

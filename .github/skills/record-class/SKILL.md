@@ -1,6 +1,6 @@
 ---
 name: record-class
-description: '录课两阶段工作流：课前预览（追加日历、建 session 骨架、写 ## 预习粗略浏览）与课后更新（原地补全同一 session、建 assignment、validate）。Use when 用户说"要上课了""课前预习""先看看这节课讲什么""下课了帮我记录""录入一次上课""record class"，或要升级 data/sessions/ 下带"课前预览"标记的骨架文件。'
+description: '录课两阶段工作流：课前预览（建 session 骨架、写 ## 预习粗略浏览）与课后更新（原地补全同一 session、建 assignment、validate）。Use when 用户说"要上课了""课前预习""先看看这节课讲什么""下课了帮我记录""录入一次上课""record class"，或要升级 painter-context/3-sessions/ 下带"课前预览"标记的骨架文件。'
 argument-hint: '[课前|课后] [课程id或日期，可省]'
 ---
 
@@ -14,16 +14,16 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 | --- | --- |
 | 用户明说"要上课了 / 课前 / 预习" | A · 课前预览 |
 | 用户明说"下课了 / 课后 / 记录今天的课" | B · 课后更新 |
-| 没明说 | 按课程 `track` 在 `data/sessions/<track>/` 查找对应日期和课程的 session：文件不存在 → 向用户确认；文件含 `> 状态：课前预览` → B；已是完整记录 → 只做增量修正，禁止重建 |
+| 没明说 | 按课程 `track` 在 `painter-context/3-sessions/<track>/` 查找对应日期和课程的 session：文件不存在 → 向用户确认；文件含 `> 状态：课前预览` → B；已是完整记录 → 只做增量修正，禁止重建 |
 
-日期、课程 id 以用户说的为准，缺省取今天；课程必须已存在于 `data/courses/`，新课程先按 conventions 建课程文件。
+日期、课程 id 以用户说的为准，缺省取今天；课程必须已存在于 `painter-context/1-courses/`，新课程先按 conventions 建课程文件。
 
 ## 阶段 A · 课前预览（粗略浏览）
 
 按 [pre-class-checklist.md](./references/pre-class-checklist.md) 执行。要点：
 
-1. 询问本次**上课时刻（HH:MM）**后，`data/calendar.md` **去重后**追加上课条目（格式 `- YYYY-MM-DD · HH:MM <课程名> 上课`，时刻写在 `·` 之后）；
-2. 用 `templates/session.md` 在课程 `track` 目录建骨架 `data/sessions/<track>/YYYY-MM-DD-<ascii-topic-slug>.md`；根据用户提供或有来源的本次课程主题提炼简短、具体的小写 ASCII slug（仅用小写字母、数字和连字符），中文主题保留在正文。主题信息不足时先询问，不以宽泛课程名或猜测内容代替；`id` 必须与文件名 stem 一致。frontmatter 只填事实（id/date/course，技能可预判才填），正文顶部加 `> 状态：课前预览 · 待上课后补全`，其下补 `> 上课时刻：HH:MM（用户提供）`；
+1. 询问本次**上课时刻（HH:MM）**（缺省不许，逐条问用户拿到确切时刻）；
+2. 用 `painter-context/templates/session.md` 在课程 `track` 目录建骨架 `painter-context/3-sessions/<track>/YYYY-MM-DD-<ascii-topic-slug>.md`；根据用户提供或有来源的本次课程主题提炼简短、具体的小写 ASCII slug（仅用小写字母、数字和连字符），中文主题保留在正文。主题信息不足时先询问，不以宽泛课程名或猜测内容代替；`id` 必须与文件名 stem 一致。frontmatter 只填事实（id/date/course，技能可预判才填），正文顶部加 `> 状态：课前预览 · 待上课后补全`，其下补 `> 上课时刻：HH:MM（用户提供）`；
 3. 本次预习**完整写入 session** 的 `## 预习`（脉络图 + 速览表），每条只写**有来源的**推测（课程大纲、上次疑问、课前作业、技能级别、相关笔记），标明来源，推测标"（推测）"；不在 course 写入单次课记录。笔记是否补充要**必问**用户；
 4. `npm run validate` → 汇报 3 条预习要点 + 课前要交的作业。
 
@@ -35,8 +35,9 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 2. 补全 `## 课堂内容` / `## 疑问` / `## 收获` 与 frontmatter（`instructor`、`duration_min`、`homework`、`homework_due`、校正 `skills`）；
 3. `## 预习` 末尾追加 `### 对照`：预告命中 / 没讲到 / 超预期；
 4. 按课次内容匹配同课程的计划；确认唯一匹配且完成条件有依据后，原地更新计划「完成回顾」中的现有进度行，不另加进度行；不明确时先询问；
-5. 作业带 DDL → 建 `data/assignments/as-NNN-<slug>.md` 并与 session **双向回链**；固定后续课 → calendar 追加；
-6. 状态标记改为 `> 状态：已完成` → `npm run validate` → 汇报 DDL 倒计时与 `npm run next` 队列位置。
+5. 作业带 DDL → 建 `painter-context/4-assignments/as-NNN-<slug>.md` 并与 session **双向回链**；
+6. 若本节 session 属于某里程碑，把 session id append 到对应 `painter-context/6-milestones/<ms-id>.md` 的 `related_sessions`；course id 首次出现时 append 到 `related_courses`；
+7. 状态标记改为 `> 状态：已完成` → `npm run validate` → 汇报 DDL 倒计时与 `npm run next` 队列位置。
 
 ## 铁律
 

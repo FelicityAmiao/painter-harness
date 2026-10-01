@@ -21,7 +21,7 @@
 3. 帮我记录练习和每次练习要达成的目的，为整体目标的拆分几个milstone，用目标进度条进行记录；
 4. 根据每个完成情况，不断为我更新插画、游戏美术的绘画技能树；
 5. 通过逐步进行，汇总出笔记本，AI agent能随时为我翻阅；
-6. 日期事项表，提供动态调整功能。
+6. 按作业 DDL 动态调整优先级与本周安排。
 
 ## 项目结构
 
@@ -30,32 +30,30 @@ painter-harness/
 ├── .github/
 │   ├── copilot-instructions.md   # 规则层：AI 维护本仓库的铁律与优先级规则
 │   ├── agents/                   # 多 agent 工作流：调研、规划、实施、审查与总控
-│   ├── prompts/                  # 3 个工作流：记练习 / 调日程 / 周复盘
+│   ├── prompts/                  # 3 个工作流：记练习 / 排优先级 / 周复盘
 │   └── skills/record-class/      # 录课工作流（skill）：课前预览 + 课后更新
-├── painter-context/              # 领域规范（契约）
+├── painter-context/              # 唯一内容根（事实源 + 契约 + 汇总）
 │   ├── conventions.md            #   数据 schema、命名、日期格式的唯一权威定义
-│   └── skill-tree.md             #   技能树定义 + L0–L5 评定标准（唯一需人工维护的表）
-├── data/                         # 数据层（唯一事实源）
-│   ├── courses/                  #   课程定义
-│   ├── sessions/                 #   按 track 分类的上课记录
-│   ├── assignments/              #   作业（真实 DDL，硬截止）
-│   ├── plans/                    #   逐课程目标/阶段的学习计划（软窗口）
-│   ├── practice/                 #   练习记录（已发生事实）
-│   ├── milestones/               #   里程碑 checklist
-│   ├── calendar.md               #   非作业类日期事项
-│   └── README.md                 #   数据目录说明与事实/计划边界
-├── notes/                        # 笔记本：AI 汇总沉淀的知识点
-├── templates/                    # 录入模板（session/assignment/practice/milestone/note）
+│   ├── skill-tree.md             #   技能树定义 + L0–L5 评定标准（唯一需人工维护的表）
+│   ├── README.md                 #   内容根说明、生命周期与边界对比
+│   ├── 1-courses/                #   课程定义
+│   ├── 2-plans/                  #   逐课程目标/阶段的学习计划（软窗口）
+│   ├── 3-sessions/               #   按 track 分类的上课记录
+│   ├── 4-assignments/            #   作业（真实 DDL，硬截止）
+│   ├── 5-practice/               #   练习记录（已发生事实）
+│   ├── 6-milestones/             #   里程碑 checklist
+│   ├── notes/                    #   笔记：AI 汇总沉淀的知识点
+│   ├── templates/                #   录入模板（session/assignment/practice/milestone/note）
+│   └── reports/                  #   rollup 生成的仪表盘（禁止手改）
 ├── harness/                      # 执行层：TypeScript CLI
 │   ├── cli.ts  lib.ts            #   入口与工具库
 │   ├── validate.ts               #   schema / 日期 / 跨文件引用 / 逾期 检查
-│   ├── rollup.ts                 #   仪表盘、日程、优先队列
+│   ├── rollup.ts                 #   仪表盘与优先队列
 │   └── site.ts                   #   单文件静态站点构建
-├── reports/                      # rollup 生成的仪表盘（禁止手改）
 └── dist/index.html               # build 生成的单文件站点（部署用）
 ```
 
-**事实与计划的分层**：`data/` 是唯一事实源；`reports/` 只生成；课程大纲、平台说明、聊天记录、草稿和其他参考材料都只是参考，不等于事实。真实 DDL 放在 `data/assignments/` 的 `due` 字段，非作业类日期写在 `data/calendar.md`，计划日期/排期日期是软安排，不能混同为硬截止。
+**事实与计划的分层**：`painter-context/` 是唯一内容根与事实源；`painter-context/reports/` 只生成；课程大纲、平台说明、聊天记录、草稿和其他参考材料都只是参考，不等于事实。真实 DDL 放在 `painter-context/4-assignments/` 的 `due` 字段，非作业类备忘沉淀进 `painter-context/notes/`，计划日期/排期日期是软安排，不能混同为硬截止。
 
 **三层 harness 分工**：规则层（AI 该怎么做的边界）→ 执行层（脚本保证机械一致性）→ 数据层（Markdown 事实源）。AI 负责判断与录入，脚本负责校验与汇总，谁也不能绕过 `npm run validate`。
 
@@ -64,18 +62,17 @@ painter-harness/
 | 命令 | 用途 |
 | --- | --- |
 | `npm run validate` | 校验数据 schema、日期、跨文件引用（写入后必跑） |
-| `npm run agenda [天数]` | 未来日程（作业 DDL + calendar 合并，逾期置顶） |
 | `npm run next [条数]` | 作业优先级队列（DDL 驱动） |
-| `npm run rollup` | 生成 `reports/dashboard.md`：课程计划 DDL 总览、里程碑进度、技能树统计、周练习量 |
+| `npm run rollup` | 生成 `painter-context/reports/dashboard.md`：课程计划 DDL 总览、里程碑进度、技能树统计、周练习量 |
 | `npm run build` | 生成 `dist/index.html` 单文件站点，部署到服务器即可在线浏览所有 Markdown |
 
-日常使用：在 VS Code 中让 Copilot 执行 `.github/prompts/` 下的 prompt（记练习、调日程、周复盘）与 `/record-class` skill（课前说"要上课了"，在课程 `track` 子目录建立 session 预习骨架；课后说"下课了"，原地补全同一份记录），或直接说明需求——`.github/copilot-instructions.md` 会自动约束 AI 按规范操作。
+日常使用：在 VS Code 中让 Copilot 执行 `.github/prompts/` 下的 prompt（记练习、排优先级、周复盘）与 `/record-class` skill（课前说"要上课了"，在课程 `track` 子目录建立 session 预习骨架；课后说"下课了"，原地补全同一份记录），或直接说明需求——`.github/copilot-instructions.md` 会自动约束 AI 按规范操作。
 
-课程目标或阶段计划按项记录在 `data/plans/`，可使用 [计划模板](templates/plan-window.md) 分次填写；学习窗口只是软安排，硬截止只取关联作业的 `due`。
+课程目标或阶段计划按项记录在 `painter-context/2-plans/`，可使用 [计划模板](painter-context/templates/plan-window.md) 分次填写；学习窗口只是软安排，硬截止只取关联作业的 `due`。
 
 ### 绘画学习 agent 流程
 
-需要整理课程材料、制定学习计划或实施学习数据变更时，可从 `painter-orchestrator` 入口提出需求。它只负责调度，不直接修改学习数据；`painter-researcher` 只读调研课程材料与已有记录，明确区分参考材料和 `data/` 事实源；`painter-planner` 依据已记录事实与 assignment 硬截止制定计划，不写文件；`painter-implementer` 只按明确批准的计划实施；`painter-reviewer` 只读检查改动并运行 `npm run validate`。
+需要整理课程材料、制定学习计划或实施学习数据变更时，可从 `painter-orchestrator` 入口提出需求。它只负责调度，不直接修改学习数据；`painter-researcher` 只读调研课程材料与已有记录，明确区分参考材料和 `painter-context/` 事实源；`painter-planner` 依据已记录事实与 assignment 硬截止制定计划，不写文件；`painter-implementer` 只按明确批准的计划实施；`painter-reviewer` 只读检查改动并运行 `npm run validate`。
 
 流程为「调研 → 规划 → 用户批准计划 → 实施 → 只读审查 → 用户决定」。计划必须先展示并获得用户明确批准，才能进入实施；审查结论无论通过或失败，都会再次等待用户决定，不会自动返工或自动结束。用户要求修改计划时回到 planner；审查后只有用户明确要求修改，才继续实施和重新审查。
 

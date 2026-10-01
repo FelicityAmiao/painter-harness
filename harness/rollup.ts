@@ -1,6 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import {
+  DIR_ASSIGNMENTS,
+  DIR_COURSES,
+  DIR_MILESTONES,
+  DIR_NOTES,
+  DIR_PLANS,
+  DIR_PRACTICE,
+  DIR_SESSIONS,
   Doc,
   ROOT,
   addDays,
@@ -9,12 +16,10 @@ import {
   isValidIso,
   load,
   loadSkills,
-  parseCalendar,
   progressBar,
   skillStats,
   today,
   titleOf,
-  weekdayCN,
 } from "./lib";
 
 const PRIO_RANK: Record<string, number> = { high: 0, medium: 1, low: 2 };
@@ -28,7 +33,7 @@ interface QueueItem {
 
 function queue(): QueueItem[] {
   const now = today();
-  return load("data/assignments")
+  return load(DIR_ASSIGNMENTS)
     .filter((a) => ["todo", "doing"].includes(String(a.data.status)) && isValidIso(a.data.due))
     .map((a) => {
       const daysLeft = diffDays(now, a.data.due);
@@ -75,70 +80,17 @@ export function nextCmd(limit = 10): void {
   console.log();
 }
 
-/* ---------------- npm run agenda ---------------- */
-
-export function agendaCmd(horizon = 14): void {
-  const now = today();
-  const end = addDays(now, horizon);
-
-  const dueItems = load("data/assignments").filter(
-    (a) => isValidIso(a.data.due) && !["done", "dropped"].includes(String(a.data.status)) && a.data.due <= end,
-  );
-  const calItems = parseCalendar().filter((c) => c.date <= end);
-
-  interface Row {
-    date: string;
-    kind: string;
-    text: string;
-    urgent?: string;
-  }
-  const rows: Row[] = [];
-  for (const a of dueItems) {
-    const daysLeft = diffDays(now, a.data.due);
-    rows.push({
-      date: a.data.due,
-      kind: "作业DDL",
-      text: `${titleOf(a)} (${a.rel})`,
-      urgent: daysLeft < 0 ? `逾期 ${-daysLeft} 天` : daysLeft === 0 ? "今天截止" : `剩 ${daysLeft} 天`,
-    });
-  }
-  for (const c of calItems) rows.push({ date: c.date, kind: "日程", text: c.text });
-
-  const byDate = new Map<string, Row[]>();
-  for (const r of rows) byDate.set(r.date, [...(byDate.get(r.date) ?? []), r]);
-
-  console.log(`\n📋 日程 · ${now} ~ ${end}（逾期置顶，${rows.length} 项）\n`);
-  const overdue = [...byDate.keys()].filter((d) => d < now).sort();
-  if (overdue.length) {
-    console.log("  —— 已逾期 ——");
-    for (const d of overdue) {
-      for (const r of byDate.get(d)!) console.log(`  🔴 ${d} [${r.kind}] ${r.text} — ${r.urgent ?? ""}`);
-    }
-    console.log();
-  }
-  const upcoming = [...byDate.keys()].filter((d) => d >= now).sort();
-  if (!upcoming.length && !overdue.length) console.log("  （这段时间没有事项）\n");
-  for (const d of upcoming) {
-    console.log(`  ${d} 周${weekdayCN(d)}`);
-    for (const r of byDate.get(d)!) {
-      const icon = r.kind === "作业DDL" ? "⏰" : "📌";
-      console.log(`    ${icon} [${r.kind}] ${r.text}${r.urgent ? ` — ${r.urgent}` : ""}`);
-    }
-  }
-  console.log();
-}
-
 /* ---------------- npm run rollup ---------------- */
 
 export function rollupCmd(): void {
   const now = today();
-  const courses = load("data/courses");
-  const sessions = load("data/sessions");
-  const assignments = load("data/assignments");
-  const plans = load("data/plans");
-  const practices = load("data/practice");
-  const milestones = load("data/milestones");
-  const notes = load("notes").filter((n) => !n.rel.endsWith("README.md"));
+  const courses = load(DIR_COURSES);
+  const sessions = load(DIR_SESSIONS);
+  const assignments = load(DIR_ASSIGNMENTS);
+  const plans = load(DIR_PLANS);
+  const practices = load(DIR_PRACTICE);
+  const milestones = load(DIR_MILESTONES);
+  const notes = load(DIR_NOTES).filter((n) => !n.rel.endsWith("README.md"));
   const skills = loadSkills();
   const stats = skillStats(practices);
   const queueItems = queue();
@@ -200,16 +152,18 @@ export function rollupCmd(): void {
   L.push("## 总体进度（里程碑）");
   L.push("");
   if (milestones.length === 0) {
-    L.push("（暂无里程碑，见 `templates/milestone.md`）");
+    L.push("（暂无里程碑，见 `painter-context/templates/milestone.md`）");
   } else {
-    L.push("| 里程碑 | 状态 | 目标日期 | 进度 |");
-    L.push("| --- | --- | --- | --- |");
+    L.push("| 里程碑 | 状态 | 目标日期 | 进度 | 关联（课次 / 课程） |");
+    L.push("| --- | --- | --- | --- | --- |");
     for (const m of milestones) {
       const { done, total } = checklistOf(m.content);
       const pct = total ? (done / total) * 100 : 0;
       const status = String(m.data.status ?? "active");
+      const relSessions = Array.isArray(m.data.related_sessions) ? m.data.related_sessions.length : 0;
+      const relCourses = Array.isArray(m.data.related_courses) ? m.data.related_courses.length : 0;
       L.push(
-        `| ${titleOf(m)} | ${status} | ${m.data.target_date ?? "—"} | ${total ? `${progressBar(pct)} (${done}/${total})` : "（无 checklist）"} |`,
+        `| ${titleOf(m)} | ${status} | ${m.data.target_date ?? "—"} | ${total ? `${progressBar(pct)} (${done}/${total})` : "（无 checklist）"} | ${relSessions} 课次 / ${relCourses} 课程 |`,
       );
     }
   }
@@ -233,7 +187,7 @@ export function rollupCmd(): void {
   L.push("## 课程计划（按真实 DDL）");
   L.push("");
   if (planItems.length === 0) {
-    L.push("（暂无课程计划，见 `templates/plan-window.md`）");
+    L.push("（暂无课程计划，见 `painter-context/templates/plan-window.md`）");
   } else {
     L.push("| 课程 | 计划 | 学习窗口（软安排） | 关联作业 | DDL | 剩余 | 状态 | 文件 |");
     L.push("| --- | --- | --- | --- | --- | --- | --- | --- |");
@@ -286,16 +240,19 @@ export function rollupCmd(): void {
   if (!overdue.length && !soon.length) L.push("- ✅ 无逾期、无临期作业");
   const stalled = milestones.filter((m) => {
     if (String(m.data.status) !== "active") return false;
-    return !practices.some((p) => p.data.milestone === m.data.id);
+    const hasPractice = practices.some((p) => p.data.milestone === m.data.id);
+    const hasSessions = Array.isArray(m.data.related_sessions) && m.data.related_sessions.length > 0;
+    const hasCourses = Array.isArray(m.data.related_courses) && m.data.related_courses.length > 0;
+    return !hasPractice && !hasSessions && !hasCourses;
   });
   for (const m of stalled) L.push(`- ⏳ 里程碑「${titleOf(m)}」还没有任何练习关联，考虑拆小第一步`);
   L.push("");
   L.push("---");
   L.push("");
-  L.push("日程合并视图：`npm run agenda` · 优先队列：`npm run next` · 发布站点：`npm run build`");
+  L.push("优先队列：`npm run next` · 发布站点：`npm run build`");
   L.push("");
 
-  const outDir = path.join(ROOT, "reports");
+  const outDir = path.join(ROOT, "painter-context", "reports");
   fs.mkdirSync(outDir, { recursive: true });
   const outFile = path.join(outDir, "dashboard.md");
   fs.writeFileSync(outFile, L.join("\n"), "utf8");

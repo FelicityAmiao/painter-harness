@@ -6,12 +6,12 @@
 
 ## 铁律
 
-1. `data/` 与 `notes/` 下的文件是唯一事实源。不要把学习数据散落在聊天记录或其他文件里。
-2. 事实先于计划：课程大纲、平台说明、聊天记录、草稿与其他参考材料只作参考，不等于真实事实；只有 `data/` 中的记录才定义实际日期、DDL、状态与成果。
-3. 硬截止与软安排分层：`data/assignments/` 中 assignment 的 `due` 是硬截止；`data/calendar.md` 只记非作业事项；`target_date`、`date`、规划日期等软安排用于协调，不得混同为硬截止，也不得被写到 `due` 或 calendar 中。
+1. `painter-context/` 下的文件是唯一事实源。不要把学习数据散落在聊天记录或其他文件里。
+2. 事实先于计划：课程大纲、平台说明、聊天记录、草稿与其他参考材料只作参考，不等于真实事实；只有 `painter-context/` 中的记录才定义实际日期、DDL、状态与成果。
+3. 硬截止与软安排分层：`painter-context/4-assignments/` 中 assignment 的 `due` 是硬截止；非作业类硬截止同样建成 assignment，纯备忘沉淀进 `painter-context/notes/`；`target_date`、`date`、规划日期等软安排用于协调，不得混同为硬截止，也不得被写到 `due` 中。
 4. 严格遵守 conventions 中的 frontmatter schema、字段枚举、文件命名（`id` 必须等于文件名去掉 `.md`）。
-5. **每次写入后运行 `npm run validate`**。出现 error 必须修复后才算完成；出现 warning 必须向用户明说。任何 `data/`、`notes/`、`painter-context/` 下的 md 写入完成后，追加跑 `npm run build`。边界：仅在确有 md 变更后运行；build 失败必须报告用户（`dist/index.html` 会过期）；`reports/` 仍禁手改，但 build 可读。
-6. 生成的汇总只写入 `reports/`（由 `npm run rollup` 生成），不要手改 `reports/` 下的文件。
+5. **每次写入后运行 `npm run validate`**。出现 error 必须修复后才算完成；出现 warning 必须向用户明说。任何 `painter-context/` 下的 md 写入完成后，追加跑 `npm run build`。边界：仅在确有 md 变更后运行；build 失败必须报告用户（`dist/index.html` 会过期）；`painter-context/reports/` 仍禁手改，但 build 可读。
+6. 生成的汇总只写入 `painter-context/reports/`（由 `npm run rollup` 生成），不要手改 `painter-context/reports/` 下的文件。
 7. 不要删除或覆盖用户的练习、上课、反思记录。需要归档或重命名时先征求确认。
 8. 涉及 DDL 变更、里程碑调整、技能树级别升降，先给出依据和方案，用户确认后再改。
 9. 每条练习记录必须有明确的 `goal`（本次目的）——这是"带脑子练习"的抓手，缺失就向用户问清楚。
@@ -22,14 +22,13 @@
 | 命令 | 用途 |
 | --- | --- |
 | `npm run validate` | 校验 schema、日期格式、跨文件引用（写入后必跑） |
-| `npm run agenda` | 未来 14 天日程（作业 DDL + calendar 事项），逾期置顶 |
 | `npm run next` | 当前作业优先级队列（DDL 驱动） |
-| `npm run rollup` | 生成 `reports/dashboard.md`：里程碑进度条、技能树统计、周练习量 |
+| `npm run rollup` | 生成 `painter-context/reports/dashboard.md`：里程碑进度条、技能树统计、周练习量 |
 | `npm run build` | 生成单文件静态站点 `dist/index.html`（可部署到服务器；md 写入完成后追加运行） |
 
 ## DDL 优先级规则
 
-`next` 命令按此规则排序，你安排日程时也用同一规则：
+`next` 命令按此规则排序，你排优先级时也用同一规则：
 
 1. 已逾期（due < 今天且未 done/dropped）→ 最高，按逾期天数升序
 2. 3 天内到期 → 次高
@@ -44,7 +43,7 @@
 
 - 录课两阶段（课前预览 / 课后更新） → `.github/skills/record-class/SKILL.md`（说"要上课了""下课了帮我记录"可自动触发，或 `/record-class`）
 - 记录一次练习 → `.github/prompts/log-practice.prompt.md`
-- 日程动态调整 → `.github/prompts/plan-week.prompt.md`
+- 优先级动态调整 → `.github/prompts/plan-week.prompt.md`
 - 周复盘（进度 + 技能树 + 笔记） → `.github/prompts/weekly-review.prompt.md`
 
 ## 完成定义

@@ -11,7 +11,7 @@ status: active
 
 # 轻微课 · 二次元插画（9 个月）
 
-- 形式：在线课程 + 阶段作业（有平台 DDL，作业 DDL 写入 `data/assignments/`）
+- 形式：在线课程 + 阶段作业（有平台 DDL，作业 DDL 写入 `../4-assignments/`）
 - 工具：板绘 + PS
 - 关联技能：`illustration/*`、`foundation/*`
 

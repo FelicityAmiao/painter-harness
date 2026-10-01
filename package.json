@@ -7,7 +7,6 @@
   "scripts": {
     "validate": "tsx harness/cli.ts validate",
     "rollup": "tsx harness/cli.ts rollup",
-    "agenda": "tsx harness/cli.ts agenda",
     "next": "tsx harness/cli.ts next",
     "build": "tsx harness/cli.ts build",
     "typecheck": "tsc --noEmit",

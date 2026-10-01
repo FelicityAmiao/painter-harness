@@ -3,7 +3,7 @@ id: learning-fatigue
 title: 学习时的疲劳观察
 skills: []
 sources:
-  - "data/sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md"
+  - "../3-sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md"
 created: 2026-09-29
 ---
 
@@ -21,8 +21,8 @@ created: 2026-09-29
 
 ## 例子 / 我的踩坑
 
-- 2026-09-29：观看 Procreate 课程前三节时，用户提到昨夜没睡够、现在困。详见 [Procreate 软件课记录](../data/sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md)。
+- 2026-09-29：观看 Procreate 课程前三节时，用户提到昨夜没睡够、现在困。详见 [Procreate 软件课记录](../3-sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md)。
 
 ## 关联
 
-- [Procreate 软件课记录](../data/sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md)
+- [Procreate 软件课记录](../3-sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md)

@@ -7,7 +7,7 @@ import { ROOT, toPosix, walkMd } from "./lib";
 /** 站点收录的目录（harness 本身、模板、配置不上站） */
 const SITE_SKIP = new Set(["node_modules", "dist", ".git", "harness", ".github", "templates"]);
 const ROOT_FILES = ["README.md"];
-const DIRS = ["painter-context", "data", "notes", "reports"];
+const DIRS = ["painter-context"];
 
 interface Entry {
   p: string;

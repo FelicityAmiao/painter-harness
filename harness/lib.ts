@@ -5,6 +5,18 @@ import matter from "gray-matter";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+/** 唯一内容根：所有学习数据、笔记、报告与模板都在此目录下 */
+export const CONTENT_ROOT = "painter-context";
+export const DIR_COURSES = `${CONTENT_ROOT}/1-courses`;
+export const DIR_PLANS = `${CONTENT_ROOT}/2-plans`;
+export const DIR_SESSIONS = `${CONTENT_ROOT}/3-sessions`;
+export const DIR_ASSIGNMENTS = `${CONTENT_ROOT}/4-assignments`;
+export const DIR_PRACTICE = `${CONTENT_ROOT}/5-practice`;
+export const DIR_MILESTONES = `${CONTENT_ROOT}/6-milestones`;
+export const DIR_NOTES = `${CONTENT_ROOT}/notes`;
+export const DIR_REPORTS = `${CONTENT_ROOT}/reports`;
+export const DIR_TEMPLATES = `${CONTENT_ROOT}/templates`;
+
 export interface Doc {
   abs: string;
   rel: string; // posix, relative to ROOT
@@ -18,11 +30,6 @@ export interface SkillRow {
   track: string;
   level: number;
   desc: string;
-}
-
-export interface CalendarItem {
-  date: string;
-  text: string;
 }
 
 const DEFAULT_SKIP = new Set(["node_modules", "dist", ".git"]);
@@ -183,17 +190,4 @@ export function skillStats(practices: Doc[]): Map<string, SkillStat> {
     }
   }
   return map;
-}
-
-/* ---------- 日历 ---------- */
-
-export function parseCalendar(): CalendarItem[] {
-  const file = path.join(ROOT, "data", "calendar.md");
-  if (!fs.existsSync(file)) return [];
-  const items: CalendarItem[] = [];
-  for (const line of fs.readFileSync(file, "utf8").split(/\r?\n/)) {
-    const m = line.match(/^- (\d{4}-\d{2}-\d{2}) · (.+)$/);
-    if (m && isValidIso(m[1])) items.push({ date: m[1], text: m[2].trim() });
-  }
-  return items;
 }

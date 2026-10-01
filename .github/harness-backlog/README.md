@@ -23,5 +23,5 @@
 
 - 记录提案不改变当前任务范围，也不改变任何 orchestrator 的确认、实施或审查状态机。
 - 实际 harness 修改必须进入 `project-orchestrator` 的计划展示、用户确认、实施与审查流程。
-- 提案记录不得修改或替代 `data/`、`notes/` 中的学习事实，不得改动 `painter-context/conventions.md`。
+- 提案记录不得修改或替代 `painter-context/` 中的学习事实，不得改动 `painter-context/conventions.md`。
 - `harness-backlog-maintainer` 仅可新增或更新本目录根目录下符合日期主题命名的提案记录；删除必须通过 guard 的精确命令并有 reviewer `PASSED` 后的明确清理指令。单条记录授权不等于 harness 修改授权。

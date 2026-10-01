@@ -1,10 +1,10 @@
 # 学习仪表盘
 
-> ⏱ 2026-10-01 生成 · `npm run rollup` · 4 课程 · 1 上课 · 0 作业 · 0 计划 · 0 练习 · 2 篇笔记
+> ⏱ 2026-10-01 生成 · `npm run rollup` · 4 课程 · 2 上课 · 0 作业 · 4 计划 · 0 练习 · 2 篇笔记
 
 ## 总体进度（里程碑）
 
-（暂无里程碑，见 `templates/milestone.md`）
+（暂无里程碑，见 `painter-context/templates/milestone.md`）
 
 ## 作业队列（DDL 驱动）
 
@@ -12,7 +12,12 @@
 
 ## 课程计划（按真实 DDL）
 
-（暂无课程计划，见 `templates/plan-window.md`）
+| 课程 | 计划 | 学习窗口（软安排） | 关联作业 | DDL | 剩余 | 状态 | 文件 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 轻微课 · 二次元插画（9 个月） | Procreate 软件课（剩余 9 段）学习窗口 | 2026-10-01 ~ 2026-10-03 | — | 无硬截止 | — | planned | `painter-context/2-plans/pw-qingweike-anime-procreate-software.md` |
+| 轻微课 · 二次元插画（9 个月） | PS 软件课（43 段）学习窗口 | 2026-10-04 ~ 2026-10-10 | — | 无硬截止 | — | planned | `painter-context/2-plans/pw-qingweike-anime-ps-software.md` |
+| 轻微课 · 二次元插画（9 个月） | 学前软件课（13 段）学习窗口 | 2026-10-11 ~ 2026-10-16 | — | 无硬截止 | — | planned | `painter-context/2-plans/pw-qingweike-anime-preparatory-software.md` |
+| 轻微课 · 二次元插画（9 个月） | 线造型基础第一部分《二次元插画课学习手册》学习窗口 | 2026-10-17 ~ 2026-10-17 | — | 无硬截止 | — | planned | `painter-context/2-plans/pw-qingweike-anime-line-basics-part1.md` |
 
 ## 技能树（含练习统计）
 
@@ -40,7 +45,7 @@
 ## 本周练习（近 7 天）
 
 - 练习 **0 次** · 累计 **0 分钟** · goal 达成率 **0%**（ok 0 / partial 0 / missed 0）
-- 上课 1 次 · 新笔记 2 篇
+- 上课 2 次 · 新笔记 2 篇
 - ⚠️ 还没有任何练习记录
 
 ## 提醒
@@ -49,4 +54,4 @@
 
 ---
 
-日程合并视图：`npm run agenda` · 优先队列：`npm run next` · 发布站点：`npm run build`
+优先队列：`npm run next` · 发布站点：`npm run build`

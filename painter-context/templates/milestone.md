@@ -3,6 +3,8 @@ id: ms-<slug>
 title: <里程碑标题>
 target_date: YYYY-MM-DD
 status: active
+related_sessions: []
+related_courses: []
 ---
 
 # <里程碑标题>
