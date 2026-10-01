@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | `painter-context/1-courses/` | 课程定义（长期存在） | `<course-id>.md` |
 | `painter-context/2-plans/` | 逐课程目标/阶段的学习计划（软窗口） | `YYYY-MM-DD-<course-id>-<topic-slug>.md`（日期取 `window_start`） |
-| `painter-context/3-sessions/<track>/` | 每次上课记录，按课程学习方向分类 | `YYYY-MM-DD-<ascii-topic-slug>.md` |
+| `painter-context/3-sessions/<course-id>/` | 每次上课记录，按关联课程 id 分类 | `YYYY-MM-DD-<ascii-topic-slug>.md` |
 | `painter-context/4-assignments/` | 作业/待交付（DDL 驱动） | `as-NNN-<slug>.md` |
 | `painter-context/5-practice/` | 每次练习记录 | `YYYY-MM-DD-<slug>.md` |
 | `painter-context/6-milestones/` | 里程碑（checklist + 进度条） | `ms-<slug>.md` |
@@ -34,7 +34,7 @@
 | `id`, `title` | ✅ | |
 | `provider` | | 老师/平台名 |
 | `type` | | `1v1` \| `online` |
-| `track` | ✅ | `foundation` \| `illustration` \| `game-art`；决定 session 分类目录，不使用 `type` 或 `provider` 分类 |
+| `track` | ✅ | `foundation` \| `illustration` \| `game-art`；课程学习方向，不决定 session 归档目录 |
 | `start_date`, `end_date` | | ISO，未知留空 |
 | `status` | | `planned` \| `active` \| `paused` \| `completed`（默认 active） |
 
@@ -50,7 +50,7 @@
 | `assignment` | | 对应 assignment 的 id（有 DDL 的作业应建 assignment 并回链） |
 | `skills` | | 技能 id 数组，如 `[foundation/line]` |
 
-路径：`painter-context/3-sessions/<关联课程 track>/YYYY-MM-DD-<ascii-topic-slug>.md`。主题 slug 使用小写 ASCII 字母、数字和连字符；中文主题保留在正文。目录必须与关联课程的 `track` 一致，文件名日期必须与 `date` 一致，`id` 必须等于文件名（不含 `.md`）。`track` 必填且仅允许 `foundation`、`illustration`、`game-art`；`type` 和 `provider` 不参与分类。
+路径：`painter-context/3-sessions/<关联课程 id>/YYYY-MM-DD-<ascii-topic-slug>.md`。目录名必须与 frontmatter 的 `course`（已存在课程的 `id`）一致，与课程的 `track`、`type`、`provider` 无关。文件名日期前缀必须是合法 `YYYY-MM-DD`，并与 `date` 一致；主题 slug 使用小写 ASCII 字母、数字和连字符，准确概括本次具体主题。标题格式为 `# 上课 YYYY-MM-DD · <课程名> · <本次具体主题>`，标题日期须与文件名日期及 `date` 一致，主题应有用户提供或其他明确来源，不能只写宽泛课程名或臆测内容；中文主题保留在标题/正文。`id` 必须等于文件名（不含 `.md`）。课程 `track` 仍必填且仅允许 `foundation`、`illustration`、`game-art`，但不用于 session 目录分类。
 
 正文小节：`## 预习`（课前可选，见下） `## 课堂内容` `## 疑问` `## 收获`。
 
@@ -106,7 +106,7 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 ## 文件流转
 
 ```text
-上课 ──▶ 3-sessions/<track>/ ──(有 DDL)──▶ 4-assignments/ ──done──▶ notes/ 沉淀
+上课 ──▶ 3-sessions/<course-id>/ ──(有 DDL)──▶ 4-assignments/ ──done──▶ notes/ 沉淀
 课程 ──▶ 2-plans/（软窗口）──(可选关联)──▶ 4-assignments/（唯一硬 DDL）
 练习 ──▶ 5-practice/ ──▶ 关联 6-milestones/（勾 checklist）
                        └──▶ 累积技能次数 ──▶ skill-tree 级别（周复盘定）

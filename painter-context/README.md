@@ -8,7 +8,7 @@
 | --- | --- |
 | `1-courses/` | 课程定义（长期存在） |
 | `2-plans/` | 逐课程目标/阶段的学习计划（软窗口，可分次录入） |
-| `3-sessions/` | 按课程学习方向分类的上课记录 |
+| `3-sessions/` | 按关联课程 id 分类的上课记录 |
 | `4-assignments/` | 作业（真实 DDL，硬截止） |
 | `5-practice/` | 练习记录（已发生事实） |
 | `6-milestones/` | 里程碑 checklist |
@@ -22,7 +22,7 @@
 flowchart LR
   C["课程 1-courses/"] --> P["计划 2-plans/（软窗口）"]
   P -. 可选关联 .-> A["作业 4-assignments/（唯一硬 DDL）"]
-  S["上课 3-sessions/（按 track 分类）"] -->|有 DDL| A
+  S["上课 3-sessions/（按课程 id 分类）"] -->|有 DDL| A
   A -->|done| N["笔记 notes/ 沉淀"]
   PR["练习 5-practice/"] --> M["里程碑 6-milestones/（勾 checklist）"]
   S -. 辅助达成 .-> M
@@ -51,7 +51,7 @@ flowchart LR
 - 课程大纲与学习规划只是参考，不能代替真实的 `due`、`date` 事实
 - 非作业类备忘沉淀进 `notes/`；需要硬截止的事项建成 assignment
 
-每次课的文件名为 `YYYY-MM-DD-<ascii-topic-slug>.md`，放在 `3-sessions/` 下与关联课程 `track` 一致的子目录；课前预习与课后课堂记录写在同一份 session 中。分类目录取关联课程的 `track`，不根据 `type` 或 `provider` 分类。
+每次课的文件名为 `YYYY-MM-DD-<ascii-topic-slug>.md`，日期前缀与课程日期及 `date` 字段一致；文件放在 `3-sessions/<course-id>/`，目录名取关联课程的 `id`，不根据 `track`、`type` 或 `provider` 分类。标题写成“上课 + 日期 + 课程名 + 本次具体主题”，主题必须来自用户提供或有来源的课程内容；文件名中的 ASCII slug 应准确概括该具体主题，中文主题写入标题/正文。课前预习与课后课堂记录写在同一份 session 中。
 
 录入方式：让 AI 执行 `.github/prompts/` 下的 prompt，或直接复制 `templates/` 模板填写。写完跑 `npm run validate`。
 

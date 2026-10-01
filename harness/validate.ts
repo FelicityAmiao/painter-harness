@@ -139,9 +139,9 @@ export function runValidate(): number {
     const course = coursesById.get(s.data.course);
     const sessionParts = s.rel.split("/");
     const sessionDir = sessionParts.slice(0, -1).join("/");
-    const expectedDir = `${DIR_SESSIONS}/${course?.data.track}`;
+    const expectedDir = `${DIR_SESSIONS}/${course?.data.id}`;
     if (sessionParts.length !== 4 || sessionDir !== expectedDir) {
-      push("error", s.rel, `session 必须位于关联课程 track 对应的目录：${DIR_SESSIONS}/<track>/（当前课程 track=${course?.data.track ?? "缺失"}）`);
+      push("error", s.rel, `session 必须位于关联课程 id 对应的目录：${DIR_SESSIONS}/<course-id>/（当前课程 id=${course?.data.id ?? "缺失"}）`);
     }
     const sessionName = path.basename(s.rel);
     const sessionNameMatch = sessionName.match(/^(\d{4}-\d{2}-\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/);

@@ -14,7 +14,7 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 | --- | --- |
 | 用户明说"要上课了 / 课前 / 预习" | A · 课前预览 |
 | 用户明说"下课了 / 课后 / 记录今天的课" | B · 课后更新 |
-| 没明说 | 按课程 `track` 在 `painter-context/3-sessions/<track>/` 查找对应日期和课程的 session：文件不存在 → 向用户确认；文件含 `> 状态：课前预览` → B；已是完整记录 → 只做增量修正，禁止重建 |
+| 没明说 | 按课程 `id` 在 `painter-context/3-sessions/<course-id>/` 查找对应日期和课程的 session：文件不存在 → 向用户确认；文件含 `> 状态：课前预览` → B；已是完整记录 → 只做增量修正，禁止重建 |
 
 日期、课程 id 以用户说的为准，缺省取今天；课程必须已存在于 `painter-context/1-courses/`，新课程先按 conventions 建课程文件。
 
@@ -23,7 +23,7 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 按 [pre-class-checklist.md](./references/pre-class-checklist.md) 执行。要点：
 
 1. 询问本次**上课时刻（HH:MM）**（缺省不许，逐条问用户拿到确切时刻）；
-2. 用 `painter-context/templates/session.md` 在课程 `track` 目录建骨架 `painter-context/3-sessions/<track>/YYYY-MM-DD-<ascii-topic-slug>.md`；根据用户提供或有来源的本次课程主题提炼简短、具体的小写 ASCII slug（仅用小写字母、数字和连字符），中文主题保留在正文。主题信息不足时先询问，不以宽泛课程名或猜测内容代替；`id` 必须与文件名 stem 一致。frontmatter 只填事实（id/date/course，技能可预判才填），正文顶部加 `> 状态：课前预览 · 待上课后补全`，其下补 `> 上课时刻：HH:MM（用户提供）`；
+2. 用 `painter-context/templates/session.md` 在关联课程 `id` 目录建骨架 `painter-context/3-sessions/<course-id>/YYYY-MM-DD-<ascii-topic-slug>.md`；标题写明日期、课程名和本次具体主题，日期与 `date` 字段及文件名日期一致。根据具体主题提炼简短、小写 ASCII slug（仅用小写字母、数字和连字符），中文主题保留在标题/正文。主题信息不足时先询问，不以宽泛课程名或猜测内容代替；`id` 必须与文件名 stem 一致。frontmatter 只填事实（id/date/course，技能可预判才填），正文顶部加 `> 状态：课前预览 · 待上课后补全`，其下补 `> 上课时刻：HH:MM（用户提供）`；
 3. 本次预习**完整写入 session** 的 `## 预习`（脉络图 + 速览表），每条只写**有来源的**推测（课程大纲、上次疑问、课前作业、技能级别、相关笔记），标明来源，推测标"（推测）"；不在 course 写入单次课记录。笔记是否补充要**必问**用户；
 4. `npm run validate` → 汇报 3 条预习要点 + 课前要交的作业。
 
@@ -31,7 +31,7 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 
 按 [post-class-checklist.md](./references/post-class-checklist.md) 执行。要点：
 
-1. 按课程 `track` 找到课前骨架**原地升级**（不存在才走完整录入流程；日期对不上先问用户再重命名，`id` 必须跟随文件名）；
+1. 按课程 `id` 找到课前骨架**原地升级**（不存在才走完整录入流程；日期对不上先问用户再重命名，`id` 必须跟随文件名）；
 2. 补全 `## 课堂内容` / `## 疑问` / `## 收获` 与 frontmatter（`instructor`、`duration_min`、`homework`、`homework_due`、校正 `skills`）；
 3. `## 预习` 末尾追加 `### 对照`：预告命中 / 没讲到 / 超预期；
 4. 按课次内容匹配同课程的计划；确认唯一匹配且完成条件有依据后，原地更新计划「完成回顾」中的现有进度行，不另加进度行；不明确时先询问；
@@ -43,7 +43,7 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 
 - **不编造**：课堂内容只来自用户口述或课件；预习只能是有来源的推测，写不清来源就问用户。
 - 课前预习和课后更新始终写在同一份 session；course 仅保存课程级资料，不回填单次课记录。
-- session 目录取关联课程的 `track`，不按 `type` 或 `provider` 分类；文件名为 `YYYY-MM-DD-<ascii-topic-slug>.md`，slug 应准确概括有依据的本次主题，中文主题写在正文；主题信息不足时先询问，不猜测或退回宽泛课程名，`id` 必须与文件名 stem 一致。
+- session 目录取关联课程的 `id`，即 `painter-context/3-sessions/<course-id>/`；课程 `track`、`type` 和 `provider` 均不决定归档目录。文件名为 `YYYY-MM-DD-<ascii-topic-slug>.md`，日期前缀必须与课程日期及 `date` 字段一致；标题写成“上课 + 日期 + 课程名 + 本次具体主题”，主题必须有依据，slug 应准确概括该主题。主题信息不足时先询问，不猜测或退回宽泛课程名；`id` 必须与文件名 stem 一致。
 - `id` = 文件名去 `.md`；日期一律 ISO `YYYY-MM-DD`；技能只写 skill-tree 表里的 id。
 - 每次写入后必跑 `npm run validate`：error 必须修复，warning 必须向用户明说。
 - 不删除、不覆盖已有上课记录；改期、归档前先征求确认。

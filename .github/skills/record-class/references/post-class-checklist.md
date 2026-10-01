@@ -4,7 +4,7 @@
 
 ## 1. 定位与分流
 
-按用户给的日期（缺省今天）+ 课程 id，在该课程 `track` 对应的 `painter-context/3-sessions/<track>/` 目录中找 session：
+按用户给的日期（缺省今天）+ 课程 id，在 `painter-context/3-sessions/<course-id>/` 目录中找 session：
 
 | 找到的文件 | 动作 |
 | --- | --- |
