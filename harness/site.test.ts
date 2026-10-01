@@ -29,7 +29,7 @@ test("relative Markdown links resolve to known site pages", () => {
 
   assert.equal(
     resolveMarkdownHref(
-      "data/sessions/illustration/2026-09-29-procreate-software.md",
+      "data/sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md",
       "../../../notes/learning-fatigue.md#fatigue",
       content,
     ),

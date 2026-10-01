@@ -34,8 +34,9 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 1. 按课程 `track` 找到课前骨架**原地升级**（不存在才走完整录入流程；日期对不上先问用户再重命名，`id` 必须跟随文件名）；
 2. 补全 `## 课堂内容` / `## 疑问` / `## 收获` 与 frontmatter（`instructor`、`duration_min`、`homework`、`homework_due`、校正 `skills`）；
 3. `## 预习` 末尾追加 `### 对照`：预告命中 / 没讲到 / 超预期；
-4. 作业带 DDL → 建 `data/assignments/as-NNN-<slug>.md` 并与 session **双向回链**；固定后续课 → calendar 追加；
-5. 状态标记改为 `> 状态：已完成` → `npm run validate` → 汇报 DDL 倒计时与 `npm run next` 队列位置。
+4. 按课次内容匹配同课程的计划；确认唯一匹配且完成条件有依据后，原地更新计划「完成回顾」中的现有进度行，不另加进度行；不明确时先询问；
+5. 作业带 DDL → 建 `data/assignments/as-NNN-<slug>.md` 并与 session **双向回链**；固定后续课 → calendar 追加；
+6. 状态标记改为 `> 状态：已完成` → `npm run validate` → 汇报 DDL 倒计时与 `npm run next` 队列位置。
 
 ## 铁律
 
