@@ -9,7 +9,7 @@
 | 目录 | 内容 | 命名 |
 | --- | --- | --- |
 | `painter-context/1-courses/` | 课程定义（长期存在） | `<course-id>.md` |
-| `painter-context/2-plans/` | 逐课程目标/阶段的学习计划（软窗口） | `YYYY-MM-DD-<course-id>-<topic-slug>.md`（日期取 `window_start`） |
+| `painter-context/2-plans/<course-id>/` | 按课程归档的目标/阶段学习计划（软窗口） | `YYYY-MM-DD-<topic-slug>.md`（日期取 `window_start`） |
 | `painter-context/3-sessions/<course-id>/` | 每次上课记录，按关联课程 id 分类 | `YYYY-MM-DD-<ascii-topic-slug>.md` |
 | `painter-context/4-assignments/` | 作业/待交付（DDL 驱动） | `as-NNN-<slug>.md` |
 | `painter-context/5-practice/` | 每次练习记录 | `YYYY-MM-DD-<slug>.md` |
@@ -79,7 +79,7 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 | `window_start`, `window_end` | ✅ | 软安排窗口，均为合法 ISO 日期；开始日期不得晚于结束日期 |
 | `status` | ✅ | `planned` \| `active` \| `paused` \| `completed` |
 
-文件名使用 `YYYY-MM-DD-<course-id>-<topic-slug>.md`，日期取 `window_start`，主题 slug 稳定且使用小写 ASCII 字母、数字和连字符。正文记录计划依据、学习窗口安排、缓冲与调整及完成回顾。仪表盘依据关联 assignment 的真实 `due` 升序排列并计算剩余天数；没有关联 assignment 的计划排在有 DDL 项之后，标记为无硬截止，并按课程标题、窗口起始日、文件路径稳定排序，不推导或伪造 DDL。
+计划必须位于 `painter-context/2-plans/<course-id>/`，其中目录名必须与 frontmatter 的 `course`（已有课程的 `id`）一致。文件名使用 `YYYY-MM-DD-<topic-slug>.md`，不重复包含 course id；日期取 `window_start`，必须是合法 ISO 日期并与 `window_start` 一致，主题 slug 稳定且使用小写 ASCII 字母、数字和连字符。`id` 必须等于文件名去掉 `.md`。正文记录计划依据、学习窗口安排、缓冲与调整及完成回顾。仪表盘依据关联 assignment 的真实 `due` 升序排列并计算剩余天数；没有关联 assignment 的计划排在有 DDL 项之后，标记为无硬截止，并按课程标题、窗口起始日、文件路径稳定排序，不推导或伪造 DDL。
 
 ### practice（`painter-context/5-practice/`）
 

@@ -1,5 +1,5 @@
 ---
-id: YYYY-MM-DD-<course-id>-<topic-slug>
+id: YYYY-MM-DD-<topic-slug>
 title: 计划标题
 course: course-id
 assignment: null

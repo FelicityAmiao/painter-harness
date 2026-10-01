@@ -186,9 +186,28 @@ export function runValidate(): number {
     base(p, "课程计划");
     if (!p.data.title) push("error", p.rel, "缺少 title");
     ref(p, "course", courseIds, "课程", true);
+    const planParts = p.rel.split("/");
+    const planDir = planParts.slice(0, -1).join("/");
+    const expectedDir = `${DIR_PLANS}/${p.data.course}`;
+    if (planParts.length !== 4 || planDir !== expectedDir) {
+      push("error", p.rel, `课程计划必须位于 ${DIR_PLANS}/<course-id>/，且目录名必须与 course 字段一致（当前 course=${p.data.course ?? "缺失"}）`);
+    }
     ref(p, "assignment", assignmentIds, "作业");
     date(p, "window_start", true);
     date(p, "window_end", true);
+    const planName = path.basename(p.rel);
+    const planNameMatch = planName.match(/^(\d{4}-\d{2}-\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/);
+    if (!planNameMatch) {
+      push("error", p.rel, "文件名必须为 YYYY-MM-DD-<topic-slug>.md，主题 slug 仅使用小写 ASCII 字母、数字和连字符");
+    } else {
+      if (!isValidIso(planNameMatch[1])) push("error", p.rel, `文件名日期不是合法 YYYY-MM-DD：${planNameMatch[1]}`);
+      if (p.data.window_start !== planNameMatch[1]) {
+        push("error", p.rel, `文件名日期 ${planNameMatch[1]} 必须与 window_start 字段 ${p.data.window_start ?? "缺失"} 一致`);
+      }
+      if (typeof p.data.course === "string" && planNameMatch[2].startsWith(`${p.data.course}-`)) {
+        push("error", p.rel, `主题 slug 不得重复包含课程 id "${p.data.course}"`);
+      }
+    }
     if (isValidIso(p.data.window_start) && isValidIso(p.data.window_end) && p.data.window_start > p.data.window_end) {
       push("error", p.rel, "window_start 不得晚于 window_end");
     }

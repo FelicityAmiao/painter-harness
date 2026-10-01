@@ -37,7 +37,7 @@ painter-harness/
 │   ├── skill-tree.md             #   技能树定义 + L0–L5 评定标准（唯一需人工维护的表）
 │   ├── README.md                 #   内容根说明、生命周期与边界对比
 │   ├── 1-courses/                #   课程定义
-│   ├── 2-plans/                  #   逐课程目标/阶段的学习计划（软窗口）
+│   ├── 2-plans/<course-id>/      #   按课程归档的目标/阶段学习计划（软窗口）
 │   ├── 3-sessions/               #   按关联课程 id 分类的上课记录
 │   ├── 4-assignments/            #   作业（真实 DDL，硬截止）
 │   ├── 5-practice/               #   练习记录（已发生事实）
@@ -68,7 +68,7 @@ painter-harness/
 
 日常使用：在 VS Code 中让 Copilot 执行 `.github/prompts/` 下的 prompt（记练习、排优先级、周复盘）与 `/record-class` skill（课前说"要上课了"，在关联课程 `id` 子目录建立 session 预习骨架；课后说"下课了"，原地补全同一份记录），或直接说明需求——`.github/copilot-instructions.md` 会自动约束 AI 按规范操作。
 
-课程目标或阶段计划按项记录在 `painter-context/2-plans/`，可使用 [计划模板](painter-context/templates/plan-window.md) 分次填写；学习窗口只是软安排，硬截止只取关联作业的 `due`。
+课程目标或阶段计划按课程归档在 `painter-context/2-plans/<course-id>/`，文件名以 `window_start` 日期开头且不重复课程 ID；可使用 [计划模板](painter-context/templates/plan-window.md) 分次填写。学习窗口只是软安排，硬截止只取关联作业的 `due`。
 
 ### 绘画学习 agent 流程
 
