@@ -23,7 +23,7 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 按 [pre-class-checklist.md](./references/pre-class-checklist.md) 执行。要点：
 
 1. 询问本次**上课时刻（HH:MM）**后，`data/calendar.md` **去重后**追加上课条目（格式 `- YYYY-MM-DD · HH:MM <课程名> 上课`，时刻写在 `·` 之后）；
-2. 用 `templates/session.md` 在课程 `track` 目录建骨架 `data/sessions/<track>/YYYY-MM-DD-<ascii-topic-slug>.md`；主题 slug 使用小写 ASCII 字母、数字和连字符，中文主题保留在正文。frontmatter 只填事实（id/date/course，技能可预判才填），正文顶部加 `> 状态：课前预览 · 待上课后补全`，其下补 `> 上课时刻：HH:MM（用户提供）`；
+2. 用 `templates/session.md` 在课程 `track` 目录建骨架 `data/sessions/<track>/YYYY-MM-DD-<ascii-topic-slug>.md`；根据用户提供或有来源的本次课程主题提炼简短、具体的小写 ASCII slug（仅用小写字母、数字和连字符），中文主题保留在正文。主题信息不足时先询问，不以宽泛课程名或猜测内容代替；`id` 必须与文件名 stem 一致。frontmatter 只填事实（id/date/course，技能可预判才填），正文顶部加 `> 状态：课前预览 · 待上课后补全`，其下补 `> 上课时刻：HH:MM（用户提供）`；
 3. 本次预习**完整写入 session** 的 `## 预习`（脉络图 + 速览表），每条只写**有来源的**推测（课程大纲、上次疑问、课前作业、技能级别、相关笔记），标明来源，推测标"（推测）"；不在 course 写入单次课记录。笔记是否补充要**必问**用户；
 4. `npm run validate` → 汇报 3 条预习要点 + 课前要交的作业。
 
@@ -42,7 +42,7 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 
 - **不编造**：课堂内容只来自用户口述或课件；预习只能是有来源的推测，写不清来源就问用户。
 - 课前预习和课后更新始终写在同一份 session；course 仅保存课程级资料，不回填单次课记录。
-- session 目录取关联课程的 `track`，不按 `type` 或 `provider` 分类；文件名为 `YYYY-MM-DD-<ascii-topic-slug>.md`，中文主题写在正文。
+- session 目录取关联课程的 `track`，不按 `type` 或 `provider` 分类；文件名为 `YYYY-MM-DD-<ascii-topic-slug>.md`，slug 应准确概括有依据的本次主题，中文主题写在正文；主题信息不足时先询问，不猜测或退回宽泛课程名，`id` 必须与文件名 stem 一致。
 - `id` = 文件名去 `.md`；日期一律 ISO `YYYY-MM-DD`；技能只写 skill-tree 表里的 id。
 - 每次写入后必跑 `npm run validate`：error 必须修复，warning 必须向用户明说。
 - 不删除、不覆盖已有上课记录；改期、归档前先征求确认。

@@ -5,6 +5,8 @@ status: backlog
 
 # 提案标题
 
+> 命名要求：frontmatter `title`、H1 标题与文件名 slug 必须具体描述待修复的内容与范围，禁止 `fix-agent`、`session-topic-slug` 这类泛指词；文件名须匹配 `YYYY-MM-DD-<小写 ASCII slug>.md`。
+
 ## 发现来源
 
 记录发现问题的来源。

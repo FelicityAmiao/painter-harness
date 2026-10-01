@@ -16,7 +16,7 @@
 
 ## 3. 建 session 骨架
 
-- 路径：`data/sessions/<课程 track>/YYYY-MM-DD-<ascii-topic-slug>.md`（主题 slug 使用小写 ASCII 字母、数字和连字符；已存在则进入阶段 B，不要重建）。`track` 取自关联课程，不使用 `type` 或 `provider` 分类。
+- 路径：`data/sessions/<课程 track>/YYYY-MM-DD-<ascii-topic-slug>.md`；根据用户提供或有来源的本次课程主题提炼简短、具体的小写 ASCII slug（仅用小写字母、数字和连字符），中文主题保留在正文。主题信息不足时先询问，不以宽泛课程名或猜测内容代替；`id` 必须与文件名 stem 一致。已存在则进入阶段 B，不要重建。`track` 取自关联课程，不使用 `type` 或 `provider` 分类。
 - 用 `templates/session.md` 结构：
   - frontmatter 只填**事实**：`id`（= 文件名去 `.md`）、`date`、`course` 必填；`skills` 能从大纲预判就填，否则 `[]`；`instructor`/`homework` 等未知留空。
   - 正文顶部加状态标记行：`> 状态：课前预览 · 待上课后补全`，其下补一行 `> 上课时刻：HH:MM（用户提供）`。

@@ -13,6 +13,7 @@ user-invocable: false
 - **只实施，不自作主张扩大范围**：严格按照传入的计划与 reviewer 反馈改动；计划之外的优化点记入「未决问题」汇报给上层，不要顺手改。
 - 允许：读文件、搜索、编辑文件、执行命令（校验、构建）。
 - 禁止：删除或覆盖用户的练习 / 上课 / 反思记录；手动编辑 `reports/` 下的文件（只能由 `npm run rollup` 生成）。
+- 不负责删除 backlog 提案；提案的定向清理由 `harness-backlog-maintainer` 按 `project-orchestrator` 在 reviewer `PASSED` 后发出的明确指令完成。
 
 ## 实施铁律
 
@@ -28,7 +29,7 @@ user-invocable: false
 1. 读取计划 + 遗留的 reviewer 问题清单。
 2. 逐项实施，同步用 todo 跟踪进度。
 3. 跑 `npm run validate`，修到无 error。
-4. 按输出格式汇报。
+4. 按输出格式汇报；若 validate 有 warning，明确上报。
 
 ## 输出格式
 
