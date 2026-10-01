@@ -9,6 +9,7 @@
 | `data/courses/` | 课程定义（长期存在） | `<course-id>.md` |
 | `data/sessions/<track>/` | 每次上课记录，按课程学习方向分类 | `YYYY-MM-DD-<ascii-topic-slug>.md` |
 | `data/assignments/` | 作业/待交付（DDL 驱动） | `as-NNN-<slug>.md` |
+| `data/plans/` | 逐课程目标/阶段的学习计划（软窗口） | `pw-<course-id>-<topic-slug>.md` |
 | `data/practice/` | 每次练习记录 | `YYYY-MM-DD-<slug>.md` |
 | `data/milestones/` | 里程碑（checklist + 进度条） | `ms-<slug>.md` |
 | `data/calendar.md` | 非作业类日期事项（上课、考试、平台截止） | 固定文件 |
@@ -66,6 +67,19 @@
 
 DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因：…`。
 
+### plan（`data/plans/`）
+
+每项课程目标或阶段单独建文件，可分次录入；计划窗口是软安排，不是硬截止。真实作业 DDL 只读取关联 assignment 的 `due`，不得复制到计划中。
+
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `id`, `title`, `course` | ✅ | `id` = 文件名（不含 `.md`）；`course` 必须是已有课程 id |
+| `assignment` | | 已有关联作业的 id；允许为空，非空时必须引用已有 assignment |
+| `window_start`, `window_end` | ✅ | 软安排窗口，均为合法 ISO 日期；开始日期不得晚于结束日期 |
+| `status` | ✅ | `planned` \| `active` \| `paused` \| `completed` |
+
+文件名建议使用 `pw-<course-id>-<topic-slug>.md`，主题 slug 稳定且使用小写 ASCII 字母、数字和连字符。正文记录计划依据、学习窗口安排、缓冲与调整及完成回顾。仪表盘依据关联 assignment 的真实 `due` 升序排列并计算剩余天数；没有关联 assignment 的计划排在有 DDL 项之后，标记为无硬截止，并按课程标题、窗口起始日、文件路径稳定排序，不推导或伪造 DDL。
+
 ### practice（`data/practice/`）
 
 | 字段 | 必填 | 说明 |
@@ -101,6 +115,7 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 
 ```text
 上课 ──▶ session ──(有DDL)──▶ assignment ──done──▶ notes/ 沉淀
+课程 ──▶ plan（软窗口）──(可选关联)──▶ assignment（唯一硬DDL）
 练习 ──▶ practice ──▶ 关联 milestone（勾 checklist）
                        └──▶ 累积技能次数 ──▶ skill-tree 级别（周复盘定）
 npm run validate ──▶ 一致性

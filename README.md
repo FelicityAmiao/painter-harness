@@ -29,6 +29,7 @@
 painter-harness/
 ├── .github/
 │   ├── copilot-instructions.md   # 规则层：AI 维护本仓库的铁律与优先级规则
+│   ├── agents/                   # 多 agent 工作流：调研、规划、实施、审查与总控
 │   ├── prompts/                  # 3 个工作流：记练习 / 调日程 / 周复盘
 │   └── skills/record-class/      # 录课工作流（skill）：课前预览 + 课后更新
 ├── painter-context/              # 领域规范（契约）
@@ -38,6 +39,7 @@ painter-harness/
 │   ├── courses/                  #   课程定义
 │   ├── sessions/                 #   按 track 分类的上课记录
 │   ├── assignments/              #   作业（真实 DDL，硬截止）
+│   ├── plans/                    #   逐课程目标/阶段的学习计划（软窗口）
 │   ├── practice/                 #   练习记录（已发生事实）
 │   ├── milestones/               #   里程碑 checklist
 │   ├── calendar.md               #   非作业类日期事项
@@ -64,10 +66,18 @@ painter-harness/
 | `npm run validate` | 校验数据 schema、日期、跨文件引用（写入后必跑） |
 | `npm run agenda [天数]` | 未来日程（作业 DDL + calendar 合并，逾期置顶） |
 | `npm run next [条数]` | 作业优先级队列（DDL 驱动） |
-| `npm run rollup` | 生成 `reports/dashboard.md`：里程碑进度条、技能树统计、周练习量 |
+| `npm run rollup` | 生成 `reports/dashboard.md`：课程计划 DDL 总览、里程碑进度、技能树统计、周练习量 |
 | `npm run build` | 生成 `dist/index.html` 单文件站点，部署到服务器即可在线浏览所有 Markdown |
 
 日常使用：在 VS Code 中让 Copilot 执行 `.github/prompts/` 下的 prompt（记练习、调日程、周复盘）与 `/record-class` skill（课前说"要上课了"，在课程 `track` 子目录建立 session 预习骨架；课后说"下课了"，原地补全同一份记录），或直接说明需求——`.github/copilot-instructions.md` 会自动约束 AI 按规范操作。
+
+课程目标或阶段计划按项记录在 `data/plans/`，可使用 [计划模板](templates/plan-window.md) 分次填写；学习窗口只是软安排，硬截止只取关联作业的 `due`。
+
+### 绘画学习 agent 流程
+
+需要整理课程材料、制定学习计划或实施学习数据变更时，可从 `painter-orchestrator` 入口提出需求。它只负责调度，不直接修改学习数据；`painter-researcher` 只读调研课程材料与已有记录，明确区分参考材料和 `data/` 事实源；`painter-planner` 依据已记录事实与 assignment 硬截止制定计划，不写文件；`painter-implementer` 只按明确批准的计划实施；`painter-reviewer` 只读检查改动并运行 `npm run validate`。
+
+流程为「调研 → 规划 → 用户批准计划 → 实施 → 只读审查 → 用户决定」。计划必须先展示并获得用户明确批准，才能进入实施；审查结论无论通过或失败，都会再次等待用户决定，不会自动返工或自动结束。用户要求修改计划时回到 planner；审查后只有用户明确要求修改，才继续实施和重新审查。
 
 ## 站点预览
 

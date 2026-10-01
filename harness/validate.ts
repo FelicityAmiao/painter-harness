@@ -21,6 +21,7 @@ const ASSIGNMENT_STATUS = ["todo", "doing", "done", "dropped"];
 const PRIORITY = ["high", "medium", "low"];
 const RESULT = ["ok", "partial", "missed"];
 const MILESTONE_STATUS = ["draft", "active", "done", "paused"];
+const PLAN_STATUS = ["planned", "active", "paused", "completed"];
 const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 
 export function runValidate(): number {
@@ -32,6 +33,7 @@ export function runValidate(): number {
   const courses = load("data/courses");
   const sessions = load("data/sessions");
   const assignments = load("data/assignments");
+  const plans = load("data/plans");
   const practices = load("data/practice");
   const milestones = load("data/milestones");
 
@@ -158,6 +160,19 @@ export function runValidate(): number {
     }
   }
 
+  for (const p of plans) {
+    base(p, "课程计划");
+    if (!p.data.title) push("error", p.rel, "缺少 title");
+    ref(p, "course", courseIds, "课程", true);
+    ref(p, "assignment", assignmentIds, "作业");
+    date(p, "window_start", true);
+    date(p, "window_end", true);
+    if (isValidIso(p.data.window_start) && isValidIso(p.data.window_end) && p.data.window_start > p.data.window_end) {
+      push("error", p.rel, "window_start 不得晚于 window_end");
+    }
+    enumOf(p, "status", PLAN_STATUS, true);
+  }
+
   for (const p of practices) {
     base(p, "练习记录");
     date(p, "date", true);
@@ -194,7 +209,7 @@ export function runValidate(): number {
   const errors = issues.filter((i) => i.level === "error");
   const warnings = issues.filter((i) => i.level === "warning");
 
-  console.log(`\n🔎 validate：${courses.length} 课程 / ${sessions.length} 上课 / ${assignments.length} 作业 / ${practices.length} 练习 / ${milestones.length} 里程碑\n`);
+  console.log(`\n🔎 validate：${courses.length} 课程 / ${sessions.length} 上课 / ${assignments.length} 作业 / ${plans.length} 计划 / ${practices.length} 练习 / ${milestones.length} 里程碑\n`);
   for (const i of errors) console.log(`  ❌ ${i.file} — ${i.msg}`);
   for (const i of warnings) console.log(`  ⚠️  ${i.file} — ${i.msg}`);
   if (errors.length === 0 && warnings.length === 0) console.log("  ✅ 全部通过");

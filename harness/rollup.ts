@@ -135,12 +135,39 @@ export function rollupCmd(): void {
   const courses = load("data/courses");
   const sessions = load("data/sessions");
   const assignments = load("data/assignments");
+  const plans = load("data/plans");
   const practices = load("data/practice");
   const milestones = load("data/milestones");
   const notes = load("notes").filter((n) => !n.rel.endsWith("README.md"));
   const skills = loadSkills();
   const stats = skillStats(practices);
   const queueItems = queue();
+  const assignmentsById = new Map(assignments.map((a) => [a.data.id, a]));
+  const coursesById = new Map(courses.map((c) => [c.data.id, c]));
+  const planItems = plans
+    .map((plan) => {
+      const assignment = assignmentsById.get(plan.data.assignment);
+      const due = assignment && isValidIso(assignment.data.due) ? assignment.data.due : null;
+      return {
+        plan,
+        course: coursesById.get(plan.data.course),
+        assignment,
+        due,
+        daysLeft: due ? diffDays(now, due) : null,
+      };
+    })
+    .sort((a, b) => {
+      if (a.due && b.due && a.due !== b.due) return a.due < b.due ? -1 : 1;
+      if (a.due && !b.due) return -1;
+      if (!a.due && b.due) return 1;
+      const courseA = titleOf(a.course ?? a.plan);
+      const courseB = titleOf(b.course ?? b.plan);
+      if (courseA !== courseB) return courseA.localeCompare(courseB);
+      const startA = String(a.plan.data.window_start ?? "");
+      const startB = String(b.plan.data.window_start ?? "");
+      if (startA !== startB) return startA.localeCompare(startB);
+      return a.plan.rel.localeCompare(b.plan.rel);
+    });
 
   const weekStart = addDays(now, -6);
   const weekPractices = practices.filter((p) => isValidIso(p.data.date) && p.data.date >= weekStart);
@@ -167,7 +194,7 @@ export function rollupCmd(): void {
   const L: string[] = [];
   L.push("# 学习仪表盘");
   L.push("");
-  L.push(`> ⏱ ${now} 生成 · \`npm run rollup\` · ${courses.length} 课程 · ${sessions.length} 上课 · ${assignments.length} 作业 · ${practices.length} 练习 · ${notes.length} 篇笔记`);
+  L.push(`> ⏱ ${now} 生成 · \`npm run rollup\` · ${courses.length} 课程 · ${sessions.length} 上课 · ${assignments.length} 作业 · ${plans.length} 计划 · ${practices.length} 练习 · ${notes.length} 篇笔记`);
   L.push("");
 
   L.push("## 总体进度（里程碑）");
@@ -200,6 +227,25 @@ export function rollupCmd(): void {
         `| ${i + 1} | ${flag(q)} ${q.due} | ${leftLabel(q.daysLeft)} | ${q.doc.data.priority ?? "medium"} | ${titleOf(q.doc)} | ${q.doc.data.status} | \`${q.doc.rel}\` |`,
       );
     });
+  }
+  L.push("");
+
+  L.push("## 课程计划（按真实 DDL）");
+  L.push("");
+  if (planItems.length === 0) {
+    L.push("（暂无课程计划，见 `templates/plan-window.md`）");
+  } else {
+    L.push("| 课程 | 计划 | 学习窗口（软安排） | 关联作业 | DDL | 剩余 | 状态 | 文件 |");
+    L.push("| --- | --- | --- | --- | --- | --- | --- | --- |");
+    for (const item of planItems) {
+      const window = `${item.plan.data.window_start} ~ ${item.plan.data.window_end}`;
+      const assignmentTitle = item.assignment ? titleOf(item.assignment) : "—";
+      const due = item.due ?? (item.assignment ? "DDL 日期无效" : "无硬截止");
+      const remaining = item.daysLeft === null ? "—" : leftLabel(item.daysLeft);
+      L.push(
+        `| ${titleOf(item.course ?? item.plan)} | ${titleOf(item.plan)} | ${window} | ${assignmentTitle} | ${due} | ${remaining} | ${item.plan.data.status} | \`${item.plan.rel}\` |`,
+      );
+    }
   }
   L.push("");
 
