@@ -38,7 +38,7 @@
 
 ## 5. 笔记沉淀询问（必问）
 
-对称于课前的必问：**"本次课是否要沉淀笔记？"**——列出相关 `painter-context/notes/` 链接后停下来问用户；要则按 `painter-context/templates/note.md` 写入（或追加到已有笔记）并在 session 回链，不要跳过直接结课。
+对称于课前的必问：**"本次课是否要沉淀笔记？"**——列出本课程 `painter-context/notes/<course-id>/` 中相关页面链接后停下来问用户；要则按 `painter-context/templates/note.md` 写入（或追加到已有笔记，frontmatter 的 `course` 与目录一致），并在 session 回链，不要跳过直接结课。
 
 ## 6. 预习闭环
 
@@ -61,10 +61,10 @@
 
 ## 8. 作业与里程碑
 
-- 作业带 DDL → 建 `painter-context/4-assignments/as-NNN-<slug>.md`：
+- 作业带 DDL → 建 `painter-context/4-assignments/<course-id>/as-NNN-<slug>.md`：
   - 编号顺延现有最大号；frontmatter：`title`、`due`（ISO）、`status: todo`、`priority`（问用户，缺省 medium）、`course`、`skills`、`session` 回链本次 session id。
   - session 的 `assignment` 字段回填该 assignment id；`homework` / `homework_due` 与 assignment 两处**保持一致**。
-- 若本节 session 属于某里程碑，把 session id append 到对应 `painter-context/6-milestones/<ms-id>.md` 的 `related_sessions`；course id 首次出现时 append 到 `related_courses`。
+- 若本节 session 属于某里程碑，把 session id append 到对应 `painter-context/6-milestones/<course-id>/<ms-id>.md` 的 `related_sessions`；course id 首次出现时 append 到 `related_courses`。
 
 ## 9. 校验
 

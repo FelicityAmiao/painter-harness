@@ -1,6 +1,7 @@
 ---
 id: ms-<slug>
 title: <里程碑标题>
+course: <course-id>
 target_date: YYYY-MM-DD
 status: active
 related_sessions: []

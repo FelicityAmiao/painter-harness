@@ -26,7 +26,7 @@
 2. **带着问题去**：读最近 1–3 次该课程 session 的 `## 疑问`、`## 收获`，把未解答/想巩固的列出来。
 3. **课前要交的作业**：`npm run next` 里该课程的 assignment，注明 DDL 与倒计时。
 4. **涉及技能现状**：对照 `painter-context/skill-tree.md`，写涉及技能 id 及当前级别。预习发现技能树缺口时，课后按 post-checklist 的技能询问步骤处理。
-5. **相关笔记（必问）**：先列出 `painter-context/notes/` 里已有的相关页面链接，然后**停下来问用户**："课前是否要补充/新建笔记？"——用户说要，就按 `painter-context/templates/note.md` 写入（或追加到已有笔记）后再继续。
+5. **相关笔记（必问）**：先列出 `painter-context/notes/<course-id>/` 里已有的相关页面链接，然后**停下来问用户**："课前是否要补充/新建笔记？"——用户说要，就按 `painter-context/templates/note.md` 写入（或追加到已有笔记，frontmatter 的 `course` 与目录一致）后再继续。
 
 素材收齐后，组织成固定两块，写入 session 的 `## 预习`：
 
@@ -47,7 +47,7 @@ flowchart LR
 | 带着问题去 | … | 上次 session 的疑问 / 收获 |
 | 课前作业与 DDL | …（倒计时 X 天） | `npm run next` |
 | 涉及技能现状 | `foundation/line` L2 | skill-tree |
-| 相关笔记 | [note-slug](../../../../painter-context/notes/note-slug.md) | `painter-context/notes/` |
+| 相关笔记 | [note-slug](../../../../painter-context/notes/<course-id>/note-slug.md) | `painter-context/notes/<course-id>/` |
 
 铁律不变：每条**注明来源**，推测标"（推测）"；写不出来源就问用户，不要编造。
 

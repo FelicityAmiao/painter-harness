@@ -25,15 +25,15 @@ test("same-page and cross-page heading links target rendered IDs", () => {
 });
 
 test("relative Markdown links resolve to known site pages", () => {
-  const content = { "painter-context/notes/learning-fatigue.md": "<h1 id=\"fatigue\">" };
+  const content = { "painter-context/notes/qingweike-anime/learning-fatigue.md": "<h1 id=\"fatigue\">" };
 
   assert.equal(
     resolveMarkdownHref(
-      "painter-context/3-sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md",
-      "../../notes/learning-fatigue.md#fatigue",
+      "painter-context/3-sessions/qingweike-anime/2026-09-29-procreate-canvas-layers-brushes.md",
+      "../../notes/qingweike-anime/learning-fatigue.md#fatigue",
       content,
     ),
-    "painter-context/notes/learning-fatigue.md",
+    "painter-context/notes/qingweike-anime/learning-fatigue.md",
   );
   assert.equal(
     resolveMarkdownHref("painter-context/1-courses/course.md", "missing.md", content),

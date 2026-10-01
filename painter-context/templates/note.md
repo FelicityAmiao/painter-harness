@@ -1,6 +1,7 @@
 ---
 id: <slug>
 title: <知识点标题>
+course: <course-id>
 skills: []
 sources: []
 created: YYYY-MM-DD
@@ -16,4 +17,4 @@ created: YYYY-MM-DD
 
 ## 关联
 
-- [相关笔记](../notes/相关笔记.md)
+- [相关笔记](相关笔记.md)

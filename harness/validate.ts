@@ -3,6 +3,7 @@ import {
   DIR_ASSIGNMENTS,
   DIR_COURSES,
   DIR_MILESTONES,
+  DIR_NOTES,
   DIR_PLANS,
   DIR_PRACTICE,
   DIR_SESSIONS,
@@ -42,6 +43,7 @@ export function runValidate(): number {
   const plans = load(DIR_PLANS);
   const practices = load(DIR_PRACTICE);
   const milestones = load(DIR_MILESTONES);
+  const notes = load(DIR_NOTES);
 
   const courseIds = new Set(courses.map((c) => c.data.id));
   const coursesById = new Map(courses.map((c) => [c.data.id, c]));
@@ -117,6 +119,15 @@ export function runValidate(): number {
     }
   };
 
+  const courseDirectory = (doc: Doc, root: string) => {
+    const parts = doc.rel.split("/");
+    const expectedDir = `${root}/${doc.data.course}`;
+    const actualDir = parts.slice(0, -1).join("/");
+    if (parts.length !== 4 || actualDir !== expectedDir) {
+      push("error", doc.rel, `记录必须位于 ${root}/<course-id>/，且目录名必须与 course 字段一致（当前 course=${doc.data.course ?? "缺失"}）`);
+    }
+  };
+
   if (courses.length === 0) push("warning", `${DIR_COURSES}/`, "还没有任何课程");
 
   for (const c of courses) {
@@ -165,7 +176,8 @@ export function runValidate(): number {
     date(a, "due", true);
     enumOf(a, "status", ASSIGNMENT_STATUS, true);
     enumOf(a, "priority", PRIORITY, false, "medium");
-    ref(a, "course", courseIds, "课程");
+    ref(a, "course", courseIds, "课程", true);
+    courseDirectory(a, DIR_ASSIGNMENTS);
     ref(a, "session", sessionIds, "上课记录");
     skillsOf(a);
     if (a.data.estimate_hours !== undefined && a.data.estimate_hours !== null && a.data.estimate_hours !== "" && !Number.isFinite(Number(a.data.estimate_hours))) {
@@ -220,6 +232,8 @@ export function runValidate(): number {
     if (typeof p.data.goal !== "string" || !p.data.goal.trim()) {
       push("error", p.rel, "缺少 goal（本次练习目的，必填）");
     }
+    ref(p, "course", courseIds, "课程", true);
+    courseDirectory(p, DIR_PRACTICE);
     enumOf(p, "result", RESULT, true);
     ref(p, "milestone", milestoneIds, "里程碑");
     ref(p, "session", sessionIds, "上课记录");
@@ -232,6 +246,8 @@ export function runValidate(): number {
   for (const m of milestones) {
     base(m, "里程碑");
     if (!m.data.title) push("error", m.rel, "缺少 title");
+    ref(m, "course", courseIds, "课程", true);
+    courseDirectory(m, DIR_MILESTONES);
     date(m, "target_date", false);
     enumOf(m, "status", MILESTONE_STATUS, false, "active");
     skillsOf(m);
@@ -239,11 +255,18 @@ export function runValidate(): number {
     refList(m, "related_courses", courseIds, "课程");
   }
 
+  for (const n of notes) {
+    base(n, "笔记");
+    if (!n.data.title) push("error", n.rel, "缺少 title");
+    ref(n, "course", courseIds, "课程", true);
+    courseDirectory(n, DIR_NOTES);
+  }
+
   /* ---- 输出 ---- */
   const errors = issues.filter((i) => i.level === "error");
   const warnings = issues.filter((i) => i.level === "warning");
 
-  console.log(`\n🔎 validate：${courses.length} 课程 / ${sessions.length} 上课 / ${assignments.length} 作业 / ${plans.length} 计划 / ${practices.length} 练习 / ${milestones.length} 里程碑\n`);
+  console.log(`\n🔎 validate：${courses.length} 课程 / ${sessions.length} 上课 / ${assignments.length} 作业 / ${plans.length} 计划 / ${practices.length} 练习 / ${milestones.length} 里程碑 / ${notes.length} 笔记\n`);
   for (const i of errors) console.log(`  ❌ ${i.file} — ${i.msg}`);
   for (const i of warnings) console.log(`  ⚠️  ${i.file} — ${i.msg}`);
   if (errors.length === 0 && warnings.length === 0) console.log("  ✅ 全部通过");

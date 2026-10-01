@@ -1,6 +1,7 @@
 ---
 id: procreate-learning-goals
 title: Procreate 课程技能点预期与目标
+course: qingweike-anime
 skills: [illustration/character, illustration/rendering]
 sources:
   - 用户口述（2026-09-29 课前预期）
@@ -30,5 +31,5 @@ created: 2026-09-29
 
 ## 关联
 
-- 上课记录：[Procreate 软件课记录](../3-sessions/illustration/2026-09-29-procreate-canvas-layers-brushes.md)（选修软件课 · iPad - Procreate）
-- 课程：[轻微课二次元插画课程](../1-courses/qingweike-anime.md)
+- 上课记录：[Procreate 软件课记录](../../3-sessions/qingweike-anime/2026-09-29-procreate-canvas-layers-brushes.md)（选修软件课 · iPad - Procreate）
+- 课程：[轻微课二次元插画课程](../../1-courses/qingweike-anime.md)

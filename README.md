@@ -39,10 +39,10 @@ painter-harness/
 │   ├── 1-courses/                #   课程定义
 │   ├── 2-plans/<course-id>/      #   按课程归档的目标/阶段学习计划（软窗口）
 │   ├── 3-sessions/               #   按关联课程 id 分类的上课记录
-│   ├── 4-assignments/            #   作业（真实 DDL，硬截止）
-│   ├── 5-practice/               #   练习记录（已发生事实）
-│   ├── 6-milestones/             #   里程碑 checklist
-│   ├── notes/                    #   笔记：AI 汇总沉淀的知识点
+│   ├── 4-assignments/<course-id>/ #   按主课程归档的作业（真实 DDL，硬截止）
+│   ├── 5-practice/<course-id>/    #   按主课程归档的练习记录（已发生事实）
+│   ├── 6-milestones/<course-id>/  #   按主课程归档的里程碑 checklist
+│   ├── notes/<course-id>/         #   按主课程归档的知识点笔记
 │   ├── templates/                #   录入模板（session/assignment/practice/milestone/note）
 │   └── reports/                  #   rollup 生成的仪表盘（禁止手改）
 ├── harness/                      # 执行层：TypeScript CLI
@@ -53,7 +53,7 @@ painter-harness/
 └── dist/index.html               # build 生成的单文件站点（部署用）
 ```
 
-**事实与计划的分层**：`painter-context/` 是唯一内容根与事实源；`painter-context/reports/` 只生成；课程大纲、平台说明、聊天记录、草稿和其他参考材料都只是参考，不等于事实。真实 DDL 放在 `painter-context/4-assignments/` 的 `due` 字段，非作业类备忘沉淀进 `painter-context/notes/`，计划日期/排期日期是软安排，不能混同为硬截止。
+**事实与计划的分层**：`painter-context/` 是唯一内容根与事实源；`painter-context/reports/` 只生成；课程大纲、平台说明、聊天记录、草稿和其他参考材料都只是参考，不等于事实。真实 DDL 放在 `painter-context/4-assignments/<course-id>/` 的 `due` 字段，非作业类备忘沉淀进对应课程的 `painter-context/notes/<course-id>/`，计划日期/排期日期是软安排，不能混同为硬截止。assignment、practice、milestone 与 note 的 `course` 必须和所在课程目录一致。
 
 **三层 harness 分工**：规则层（AI 该怎么做的边界）→ 执行层（脚本保证机械一致性）→ 数据层（Markdown 事实源）。AI 负责判断与录入，脚本负责校验与汇总，谁也不能绕过 `npm run validate`。
 

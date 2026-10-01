@@ -35,8 +35,8 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 2. 补全 `## 课堂内容` / `## 疑问` / `## 收获` 与 frontmatter（`instructor`、`duration_min`、`homework`、`homework_due`、校正 `skills`）；
 3. `## 预习` 末尾追加 `### 对照`：预告命中 / 没讲到 / 超预期；
 4. 按课次内容匹配同课程的计划；确认唯一匹配且完成条件有依据后，原地更新计划「完成回顾」中的现有进度行，不另加进度行；不明确时先询问；
-5. 作业带 DDL → 建 `painter-context/4-assignments/as-NNN-<slug>.md` 并与 session **双向回链**；
-6. 若本节 session 属于某里程碑，把 session id append 到对应 `painter-context/6-milestones/<ms-id>.md` 的 `related_sessions`；course id 首次出现时 append 到 `related_courses`；
+5. 作业带 DDL → 建 `painter-context/4-assignments/<course-id>/as-NNN-<slug>.md`，frontmatter 的 `course` 与目录一致，并与 session **双向回链**；
+6. 若本节 session 属于某里程碑，在 `painter-context/6-milestones/<course-id>/<ms-id>.md` 的 `related_sessions` 中 append session id；course id 首次出现时 append 到 `related_courses`；
 7. 状态标记改为 `> 状态：已完成` → `npm run validate` → 汇报 DDL 倒计时与 `npm run next` 队列位置。
 
 ## 铁律

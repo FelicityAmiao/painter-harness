@@ -11,10 +11,10 @@
 | `painter-context/1-courses/` | 课程定义（长期存在） | `<course-id>.md` |
 | `painter-context/2-plans/<course-id>/` | 按课程归档的目标/阶段学习计划（软窗口） | `YYYY-MM-DD-<topic-slug>.md`（日期取 `window_start`） |
 | `painter-context/3-sessions/<course-id>/` | 每次上课记录，按关联课程 id 分类 | `YYYY-MM-DD-<ascii-topic-slug>.md` |
-| `painter-context/4-assignments/` | 作业/待交付（DDL 驱动） | `as-NNN-<slug>.md` |
-| `painter-context/5-practice/` | 每次练习记录 | `YYYY-MM-DD-<slug>.md` |
-| `painter-context/6-milestones/` | 里程碑（checklist + 进度条） | `ms-<slug>.md` |
-| `painter-context/notes/` | 沉淀的知识点笔记（AI 汇总，内容根内子目录） | `<slug>.md` |
+| `painter-context/4-assignments/<course-id>/` | 按主课程归档的作业/待交付（DDL 驱动） | `as-NNN-<slug>.md` |
+| `painter-context/5-practice/<course-id>/` | 按主课程归档的每次练习记录 | `YYYY-MM-DD-<slug>.md` |
+| `painter-context/6-milestones/<course-id>/` | 按主课程归档的里程碑（checklist + 进度条） | `ms-<slug>.md` |
+| `painter-context/notes/<course-id>/` | 按主课程归档的知识点笔记（AI 汇总） | `<slug>.md` |
 | `painter-context/templates/` | 录入模板（内容根内子目录） | — |
 | `painter-context/reports/` | 脚本生成的汇总，禁止手改（内容根内子目录） | — |
 
@@ -60,11 +60,13 @@
 
 | 字段 | 必填 | 说明 |
 | --- | --- | --- |
-| `id`, `title`, `due` | ✅ | `due` 为 ISO |
+| `id`, `title`, `due`, `course` | ✅ | `due` 为 ISO；`course` 必须是已有课程 id，且目录必须与之相同 |
 | `status` | ✅ | `todo` \| `doing` \| `done` \| `dropped` |
 | `priority` | | `high` \| `medium`（默认）\| `low` |
-| `course`, `session` | | 关联 id |
+| `session` | | 关联 session id |
 | `skills`, `estimate_hours` | | |
+
+路径：`painter-context/4-assignments/<course-id>/as-NNN-<slug>.md`。目录名必须与必填 `course`（已有课程的 `id`）一致；文件名和 `id` 规则不变。
 
 DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因：…`。
 
@@ -85,9 +87,11 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 
 | 字段 | 必填 | 说明 |
 | --- | --- | --- |
-| `id`, `date`, `goal`, `result` | ✅ | `goal` = 本次练习目的；`result`: `ok` \| `partial` \| `missed` |
+| `id`, `date`, `goal`, `result`, `course` | ✅ | `goal` = 本次练习目的；`result`: `ok` \| `partial` \| `missed`；`course` 必须是已有课程 id |
 | `duration_min` | | 数字 |
 | `skills`, `milestone`, `session` | | 关联 id |
+
+路径：`painter-context/5-practice/<course-id>/YYYY-MM-DD-<slug>.md`。目录名必须与 `course` 一致；文件名和 `id` 规则不变。
 
 正文小节：`## 过程` `## 反思` `## 下次改进`。反思必须写"脑子怎么用的"，不能只记流水账。
 
@@ -95,7 +99,7 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 
 | 字段 | 必填 | 说明 |
 | --- | --- | --- |
-| `id`, `title` | ✅ | |
+| `id`, `title`, `course` | ✅ | `course` 是主课程，必须是已有课程 id，且目录必须与之相同 |
 | `target_date` | | ISO |
 | `status` | | `draft` \| `active` \| `done` \| `paused`（默认 active） |
 | `related_sessions` | | session id 数组；辅助达成该里程碑的课次，可跨 track，缺省视为 `[]` |
@@ -103,12 +107,23 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 
 进度 = 正文 checklist 中 `- [x]` 占比（rollup 统计，不用手填百分比）。`related_sessions` 与 `related_courses` 是 milestone 指向 session / course 的反向关联，validate 会逐项校验 id 是否存在；缺省即空数组，不报错。
 
+路径：`painter-context/6-milestones/<course-id>/ms-<slug>.md`。`related_courses` 可记录其他辅助关联课程，不改变 `course` 所代表的主课程归档。
+
+### note（`painter-context/notes/`）
+
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `id`, `title`, `course` | ✅ | `course` 必须是已有课程 id，且目录必须与之相同 |
+| `skills`, `sources`, `created` | | 技能、来源与创建日期 |
+
+路径：`painter-context/notes/<course-id>/<slug>.md`。笔记中的 Markdown 相对链接以笔记所在课程目录为起点。
+
 ## 文件流转
 
 ```text
-上课 ──▶ 3-sessions/<course-id>/ ──(有 DDL)──▶ 4-assignments/ ──done──▶ notes/ 沉淀
-课程 ──▶ 2-plans/（软窗口）──(可选关联)──▶ 4-assignments/（唯一硬 DDL）
-练习 ──▶ 5-practice/ ──▶ 关联 6-milestones/（勾 checklist）
+上课 ──▶ 3-sessions/<course-id>/ ──(有 DDL)──▶ 4-assignments/<course-id>/ ──done──▶ notes/<course-id>/ 沉淀
+课程 ──▶ 2-plans/（软窗口）──(可选关联)──▶ 4-assignments/<course-id>/（唯一硬 DDL）
+练习 ──▶ 5-practice/<course-id>/ ──▶ 关联 6-milestones/<course-id>/（勾 checklist）
                        └──▶ 累积技能次数 ──▶ skill-tree 级别（周复盘定）
 session ──(辅助达成)──▶ milestone（反向关联写在 milestone 的 related_sessions / related_courses）
 npm run validate ──▶ 一致性
