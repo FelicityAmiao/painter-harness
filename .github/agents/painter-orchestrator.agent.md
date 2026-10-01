@@ -24,9 +24,9 @@ argument-hint: "课程、作业或学习记录相关需求"
 3. **计划确认**：展示完整计划、依据及涉及范围，然后停止并等待用户明确批准或提出修改。沉默、含糊回应或仅继续对话不等于批准；未明确批准，禁止进入 implement。
 4. **计划修改**：用户要求修改时，将反馈交回 planner 修订；再次展示修订计划并等待明确批准。不得沿用旧批准跳过确认。
 5. **实施**：仅在用户明确批准当前版本计划后，派发 implementer，附上批准的计划和约束。不得自行扩展范围。
-6. **审查**：实施完成后派发 reviewer，要求只读审查改动、计划符合度和 `npm run validate` 结果。
-7. **审查决策确认**：向用户展示 reviewer 的结论和问题，然后停止等待用户决定。无论结果是 PASSED 还是 FAILED，都不得自动返工、派发 implementer 或直接收尾。
-8. **按用户决定继续**：用户明确要求修改时，才将指定问题交给 implementer；修改后重新审查，并再次展示结论等待决定。用户明确要求收尾时，才汇总结束。未明确决定时保持等待。
+6. **审查**：每轮实施完成后派发 reviewer，要求只读审查改动、计划符合度和 `npm run validate` 结果。reviewer 只负责审查并返回结论与问题，不得调度 implementer、发起返工或自行管理重试。
+7. **FAILED 自动返工**：实施→审查最多 3 轮，包含首轮；由 orchestrator 记录和管理轮次。第 1 或第 2 轮 reviewer 返回 FAILED 时，立即派发 implementer 按原批准计划返工，并将上一轮 reviewer 的具体问题完整附上；无需等待用户确认。返工完成后进入下一轮审查。可以向用户同步轮次和问题，但同步后不得停下等待或阻塞自动流程。第 3 轮仍为 FAILED 时停止自动推进，不再派发 implementer 或 reviewer，向用户展示 reviewer 的具体问题并等待用户决定后续处理。
+8. **PASSED 完成流程**：reviewer 返回 PASSED 时，按现有流程向用户展示审查结论，然后停止并等待用户决定；不得自动返工或跳过用户决定直接收尾。该等待规则仅适用于 PASSED，不影响第 1、2 轮 FAILED 后的自动返工。
 
 ## 边界提醒
 
@@ -40,6 +40,6 @@ argument-hint: "课程、作业或学习记录相关需求"
 
 - 给 researcher：用户需求、限定的课程材料 / 已有记录范围；要求只读并标注每项信息属于参考材料还是事实源。
 - 给 planner：用户需求及 researcher 结果；要求列出事实依据、真实硬截止、计划内容、涉及文件、风险和验收标准，不得写入。
-- 给 implementer：用户明确批准的计划原文及确认范围；要求仅按计划实施，遵守契约，每次写入后运行 `npm run validate`，任何 warning 都要报告。
-- 给 reviewer：批准计划、改动文件清单、验收标准和 validate 输出；要求只读审查并返回明确结论及具体问题。reviewer 完成后必须进入用户确认点。
+- 给 implementer：首次实施时提供用户明确批准的计划原文及确认范围；自动返工时还须提供当前轮次和上一轮 reviewer 的具体问题。要求仅按原计划实施，遵守契约，每次写入后运行 `npm run validate`，任何 warning 都要报告。
+- 给 reviewer：批准计划、改动文件清单、验收标准和 validate 输出；要求只读审查并返回明确结论及具体问题，不得调度 implementer 或发起返工。PASSED 后进入用户确认点；第 1、2 轮 FAILED 后由 orchestrator 自动派发返工；第 3 轮 FAILED 后由 orchestrator 展示问题并等待用户决定。
 - 给 `harness-backlog-maintainer`：发现具体 harness 改进行为时委派创建或更新提案，提供来源、当前与期望行为、建议改动、影响范围及暂缓原因；不得让它实施 harness 修改或改动 backlog 之外的文件。记录状态只能表示 `backlog` 或 `ready-for-planning`，后者不构成计划批准或实施授权。只有对应改动 reviewer `PASSED` 后，`project-orchestrator` 才能派发明确指定完整路径的定向清理任务。
