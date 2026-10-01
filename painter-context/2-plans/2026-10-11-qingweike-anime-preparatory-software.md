@@ -1,5 +1,5 @@
 ---
-id: pw-qingweike-anime-preparatory-software
+id: 2026-10-11-qingweike-anime-preparatory-software
 title: 学前软件课（13 段）学习窗口
 course: qingweike-anime
 window_start: 2026-10-11

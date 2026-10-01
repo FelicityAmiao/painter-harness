@@ -1,5 +1,5 @@
 ---
-id: pw-qingweike-anime-ps-software
+id: 2026-10-04-qingweike-anime-ps-software
 title: PS 软件课（43 段）学习窗口
 course: qingweike-anime
 window_start: 2026-10-04

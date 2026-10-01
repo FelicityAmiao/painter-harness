@@ -14,10 +14,10 @@
 
 | 课程 | 计划 | 学习窗口（软安排） | 关联作业 | DDL | 剩余 | 状态 | 文件 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 轻微课 · 二次元插画（9 个月） | Procreate 软件课（剩余 9 段）学习窗口 | 2026-10-01 ~ 2026-10-03 | — | 无硬截止 | — | planned | `painter-context/2-plans/pw-qingweike-anime-procreate-software.md` |
-| 轻微课 · 二次元插画（9 个月） | PS 软件课（43 段）学习窗口 | 2026-10-04 ~ 2026-10-10 | — | 无硬截止 | — | planned | `painter-context/2-plans/pw-qingweike-anime-ps-software.md` |
-| 轻微课 · 二次元插画（9 个月） | 学前软件课（13 段）学习窗口 | 2026-10-11 ~ 2026-10-16 | — | 无硬截止 | — | planned | `painter-context/2-plans/pw-qingweike-anime-preparatory-software.md` |
-| 轻微课 · 二次元插画（9 个月） | 线造型基础第一部分《二次元插画课学习手册》学习窗口 | 2026-10-17 ~ 2026-10-17 | — | 无硬截止 | — | planned | `painter-context/2-plans/pw-qingweike-anime-line-basics-part1.md` |
+| 轻微课 · 二次元插画（9 个月） | Procreate 软件课（剩余 9 段）学习窗口 | 2026-10-01 ~ 2026-10-03 | — | 无硬截止 | — | planned | `painter-context/2-plans/2026-10-01-qingweike-anime-procreate-software.md` |
+| 轻微课 · 二次元插画（9 个月） | PS 软件课（43 段）学习窗口 | 2026-10-04 ~ 2026-10-10 | — | 无硬截止 | — | planned | `painter-context/2-plans/2026-10-04-qingweike-anime-ps-software.md` |
+| 轻微课 · 二次元插画（9 个月） | 学前软件课（13 段）学习窗口 | 2026-10-11 ~ 2026-10-16 | — | 无硬截止 | — | planned | `painter-context/2-plans/2026-10-11-qingweike-anime-preparatory-software.md` |
+| 轻微课 · 二次元插画（9 个月） | 线造型基础第一部分《二次元插画课学习手册》学习窗口 | 2026-10-17 ~ 2026-10-17 | — | 无硬截止 | — | planned | `painter-context/2-plans/2026-10-17-qingweike-anime-line-basics-part1.md` |
 
 ## 技能树（含练习统计）
 

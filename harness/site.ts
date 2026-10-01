@@ -14,6 +14,25 @@ interface Entry {
   t: string;
 }
 
+/**
+ * 左栏需要展示的内容分类目录（仅 site 使用，不影响 validate / rollup）。
+ * 只取内容根的直接子目录并排除 SITE_SKIP，避免把 1-courses/assets 这类
+ * 嵌套资源目录也渲染成空文件夹。
+ */
+function contentDirs(): string[] {
+  const out: string[] = [];
+  for (const root of DIRS) {
+    const abs = path.join(ROOT, root);
+    if (!fs.existsSync(abs)) continue;
+    for (const entry of fs.readdirSync(abs, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      if (SITE_SKIP.has(entry.name)) continue;
+      out.push(toPosix(path.join(root, entry.name)));
+    }
+  }
+  return out.sort();
+}
+
 export function resolveMarkdownHref(
   from: string,
   href: string,
@@ -151,13 +170,23 @@ export function buildSite(): void {
     if (!fs.existsSync(path.join(ROOT, d))) continue;
     for (const abs of walkMd(d, SITE_SKIP)) add(abs);
   }
+
+  // 方案 B：只有 README、没有其它页面的目录，把其 README 收录为目录索引页。
+  // 已有其它页面的目录不额外收录 README（保持原有行为）。
+  const dirs = contentDirs();
+  for (const dir of dirs) {
+    if (manifest.some((e) => e.p.startsWith(dir + "/"))) continue;
+    const readme = path.join(ROOT, ...dir.split("/"), "README.md");
+    if (fs.existsSync(readme)) add(readme);
+  }
+
   manifest.sort((a, b) => {
     if (a.p === "README.md") return -1;
     if (b.p === "README.md") return 1;
     return a.p.localeCompare(b.p);
   });
 
-  const json = JSON.stringify({ manifest, content })
+  const json = JSON.stringify({ manifest, content, dirs })
     .replace(/<\//g, "<\\/")
     .replace(/\u2028/g, "\\u2028")
     .replace(/\u2029/g, "\\u2029");
@@ -233,6 +262,7 @@ main{flex:1;overflow-y:auto}
 #view input[type=checkbox]{accent-color:var(--accent);margin-right:6px}
 #view img{max-width:100%;border-radius:10px;cursor:zoom-in}
 .empty{color:var(--muted);padding:60px 0;text-align:center}
+.dir-empty{color:var(--muted);font-size:12.5px;padding:4px 9px;opacity:.7}
 @media (max-width:820px){#app{flex-direction:column}aside{width:100%;min-width:0;max-height:40vh}
   #view{padding:20px}}
 </style>
@@ -259,15 +289,21 @@ var searchEl = document.getElementById('search');
 var titleMap = {};
 D.manifest.forEach(function (e) { titleMap[e.p] = e.t; });
 
+function ensureDir(root, segs) {
+  var node = root;
+  segs.forEach(function (seg) {
+    if (!node.dirs[seg]) node.dirs[seg] = { dirs: {}, files: [] };
+    node = node.dirs[seg];
+  });
+  return node;
+}
+
 function buildTree() {
   var root = { dirs: {}, files: [] };
+  (D.dirs || []).forEach(function (d) { ensureDir(root, d.split('/')); });
   D.manifest.forEach(function (e) {
     if (e.p === 'README.md') { root.files.unshift(e); return; }
-    var parts = e.p.split('/'); var name = parts.pop(); var node = root;
-    parts.forEach(function (seg) {
-      if (!node.dirs[seg]) node.dirs[seg] = { dirs: {}, files: [] };
-      node = node.dirs[seg];
-    });
+    var parts = e.p.split('/'); var name = parts.pop(); var node = ensureDir(root, parts);
     node.files.push({ p: e.p, t: e.t, name: name });
   });
   return root;
@@ -302,6 +338,12 @@ function makeDir(name, node, depth) {
   Object.keys(node.dirs).sort().forEach(function (d) {
     body.appendChild(makeDir(d, node.dirs[d], depth + 1));
   });
+  if (node.files.length === 0 && Object.keys(node.dirs).length === 0) {
+    var hint = document.createElement('div');
+    hint.className = 'dir-empty';
+    hint.textContent = '（暂无内容）';
+    body.appendChild(hint);
+  }
   det.appendChild(body);
   return det;
 }

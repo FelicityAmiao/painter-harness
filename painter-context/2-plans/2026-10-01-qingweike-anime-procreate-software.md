@@ -1,5 +1,5 @@
 ---
-id: pw-qingweike-anime-procreate-software
+id: 2026-10-01-qingweike-anime-procreate-software
 title: Procreate 软件课（剩余 9 段）学习窗口
 course: qingweike-anime
 window_start: 2026-10-01
