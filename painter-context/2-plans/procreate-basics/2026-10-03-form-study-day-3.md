@@ -5,7 +5,7 @@ course: procreate-basics
 assignment: null
 window_start: 2026-10-03
 window_end: 2026-10-03
-status: planned
+status: ing
 ---
 
 ## 计划依据
@@ -28,4 +28,4 @@ status: planned
 
 ## 完成回顾
 
-尚未开始。完成时记录实际完成情况、对体块概括及结构比例关系的收获，以及下一步；本计划不代替练习记录。
+已完成 2/7 项；具体完成项尚未确认，不作推断。本计划不代替练习记录。

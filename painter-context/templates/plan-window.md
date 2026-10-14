@@ -5,7 +5,7 @@ course: course-id
 assignment: null
 window_start: YYYY-MM-DD
 window_end: YYYY-MM-DD
-status: planned
+status: new
 ---
 
 ## 计划依据

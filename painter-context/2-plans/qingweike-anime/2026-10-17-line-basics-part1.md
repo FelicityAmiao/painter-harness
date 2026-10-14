@@ -4,7 +4,7 @@ title: 线造型基础第一部分《二次元插画课学习手册》学习窗�
 course: qingweike-anime
 window_start: 2026-10-17
 window_end: 2026-10-17
-status: planned
+status: new
 ---
 
 # 线造型基础第一部分《二次元插画课学习手册》学习窗口

@@ -2,6 +2,7 @@
 id: YYYY-MM-DD-<ascii-topic-slug>
 date: YYYY-MM-DD
 course: <course-id>
+status: new
 instructor:
 duration_min:
 homework:

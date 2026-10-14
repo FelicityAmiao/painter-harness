@@ -4,7 +4,7 @@ title: 学前软件课（13 段）学习窗口
 course: qingweike-anime
 window_start: 2026-10-11
 window_end: 2026-10-16
-status: planned
+status: new
 ---
 
 # 学前软件课（13 段）学习窗口

@@ -6,7 +6,7 @@ type: 1v1
 track: illustration
 start_date:
 end_date:
-status: active
+status: ing
 ---
 
 # 插画创意（一对一）

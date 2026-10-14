@@ -51,6 +51,13 @@ flowchart LR
 - 课程大纲与学习规划只是参考，不能代替真实的 `due`、`date` 事实
 - 非作业类备忘沉淀进对应课程的 `notes/<course-id>/`；需要硬截止的事项建成对应课程的 assignment
 
+## 状态与里程碑
+
+- course、plan、assignment、practice 使用 `new|ing|done|closed`：`done` 是目标完成，`closed` 是终止且未完成，不计入成果或待办。
+- session 只使用 `new|done`，并与正文状态标识同步：`new` 是课前预览 / 待补全，`done` 是课后已完成。
+- milestone 缺省为未完成，仅 checklist 全勾、证据充分且用户明确确认后写 `status: done`。
+- 任一 course、plan、session、assignment 或 practice 明确 `done` 后，planner 必须先对账 milestone；结论只能是更新已有 checklist、提出新 milestone 或证据不足不改。任何里程碑写入仍需用户确认。
+
 每次课的文件名为 `YYYY-MM-DD-<ascii-topic-slug>.md`，日期前缀与课程日期及 `date` 字段一致；文件放在 `3-sessions/<course-id>/`，目录名取关联课程的 `id`，不根据 `track`、`type` 或 `provider` 分类。标题写成“上课 + 日期 + 课程名 + 本次具体主题”，主题必须来自用户提供或有来源的课程内容；文件名中的 ASCII slug 应准确概括该具体主题，中文主题写入标题/正文。课前预习与课后课堂记录写在同一份 session 中。
 
 assignment、practice、milestone 与 note 均按主课程归档到 `<集合>/<course-id>/`，frontmatter 的 `course` 必须与目录名一致。录入方式：让 AI 执行 `.github/prompts/` 下的 prompt，或直接复制 `templates/` 模板填写。写完跑 `npm run validate`。

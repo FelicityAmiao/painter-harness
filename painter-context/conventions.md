@@ -25,6 +25,13 @@
 - 未完成/未开始用字段缺省或约定默认值表示，不写中文状态。
 - 技能引用一律写 skill-tree 表格里的 `id`（如 `foundation/line`），validate 会查表拦截。
 
+## 状态模型
+
+- course、plan、assignment、practice 的 `status` 必填，枚举为 `new`（未开始，默认值）、`ing`（进行中）、`done`（目标完成）或 `closed`（终止且未完成）。`closed` 不计入成果或待办。
+- session 的 `status` 必填，且只能为 `new`（课前预览 / 待补全，正文必须有 `> 状态：课前预览 · 待上课后补全`）或 `done`（课后已完成，正文必须有 `> 状态：已完成`）。session 不使用 `ing` 或 `closed`。
+- milestone 的 `status` 缺省表示未完成；只有正文 checklist 存在且全部勾选，并有充分证据和用户明确确认时才写 `status: done`。
+- practice 保留 `result: ok|partial|missed`。`new` / `ing` 时 `result` 可缺省；`done` / `closed` 时必须填写。`result` 记录练习结果，不替代 `status`。
+
 ## 各集合 schema
 
 ### course（`painter-context/1-courses/`）
@@ -36,7 +43,7 @@
 | `type` | | `1v1` \| `online` |
 | `track` | ✅ | `foundation` \| `illustration` \| `game-art`；课程学习方向，不决定 session 归档目录 |
 | `start_date`, `end_date` | | ISO，未知留空 |
-| `status` | | `planned` \| `active` \| `paused` \| `completed`（默认 active） |
+| `status` | ✅ | `new` \| `ing` \| `done` \| `closed`（默认 `new`） |
 
 课程文件只保存课程级资料；每次课的预习与课后记录统一写在对应 session，不在课程文件中建立单次课预习记录。
 
@@ -49,19 +56,20 @@
 | `homework`, `homework_due` | | 作业描述与 DDL（ISO） |
 | `assignment` | | 对应 assignment 的 id（有 DDL 的作业应建 assignment 并回链） |
 | `skills` | | 技能 id 数组，如 `[foundation/line]` |
+| `status` | ✅ | `new` \| `done`（默认 `new`） |
 
 路径：`painter-context/3-sessions/<关联课程 id>/YYYY-MM-DD-<ascii-topic-slug>.md`。目录名必须与 frontmatter 的 `course`（已存在课程的 `id`）一致，与课程的 `track`、`type`、`provider` 无关。文件名日期前缀必须是合法 `YYYY-MM-DD`，并与 `date` 一致；主题 slug 使用小写 ASCII 字母、数字和连字符，准确概括本次具体主题。标题格式为 `# 上课 YYYY-MM-DD · <课程名> · <本次具体主题>`，标题日期须与文件名日期及 `date` 一致，主题应有用户提供或其他明确来源，不能只写宽泛课程名或臆测内容；中文主题保留在标题/正文。`id` 必须等于文件名（不含 `.md`）。课程 `track` 仍必填且仅允许 `foundation`、`illustration`、`game-art`，但不用于 session 目录分类。
 
 正文小节：`## 预习`（课前可选，见下） `## 课堂内容` `## 疑问` `## 收获`。
 
-- **两阶段录课**：课前可先建骨架文件（frontmatter 只填事实），正文顶部加状态标记行 `> 状态：课前预览 · 待上课后补全`，`## 预习` 写有来源的粗略浏览；课前与课后内容都写入同一 session。课后原地升级，状态标记改为 `> 状态：已完成`，并在 `## 预习` 末尾追加 `### 对照`（命中 / 没讲到 / 超预期）。单次课内容不回填 course。状态标记与 `## 预习` 都只在正文，validate 只校验 frontmatter。
+- **两阶段录课**：课前可先建骨架文件（frontmatter 只填事实），正文顶部加状态标记行 `> 状态：课前预览 · 待上课后补全`，`## 预习` 写有来源的粗略浏览；课前与课后内容都写入同一 session。课后原地升级，状态标记改为 `> 状态：已完成`，并在 `## 预习` 末尾追加 `### 对照`（命中 / 没讲到 / 超预期）。单次课内容不回填 course。状态标记与 `## 预习` 都只在正文；validate 校验 frontmatter，并对 session 校验正文状态标记与 frontmatter.status 的一致性。
 
 ### assignment（`painter-context/4-assignments/`）
 
 | 字段 | 必填 | 说明 |
 | --- | --- | --- |
 | `id`, `title`, `due`, `course` | ✅ | `due` 为 ISO；`course` 必须是已有课程 id，且目录必须与之相同 |
-| `status` | ✅ | `todo` \| `doing` \| `done` \| `dropped` |
+| `status` | ✅ | `new` \| `ing` \| `done` \| `closed`（默认 `new`） |
 | `priority` | | `high` \| `medium`（默认）\| `low` |
 | `session` | | 关联 session id |
 | `skills`, `estimate_hours` | | |
@@ -79,7 +87,7 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 | `id`, `title`, `course` | ✅ | `id` = 文件名（不含 `.md`）；`course` 必须是已有课程 id |
 | `assignment` | | 已有关联作业的 id；允许为空，非空时必须引用已有 assignment |
 | `window_start`, `window_end` | ✅ | 软安排窗口，均为合法 ISO 日期；开始日期不得晚于结束日期 |
-| `status` | ✅ | `planned` \| `active` \| `paused` \| `completed` |
+| `status` | ✅ | `new` \| `ing` \| `done` \| `closed`（默认 `new`） |
 
 计划必须位于 `painter-context/2-plans/<course-id>/`，其中目录名必须与 frontmatter 的 `course`（已有课程的 `id`）一致。文件名使用 `YYYY-MM-DD-<topic-slug>.md`，不重复包含 course id；日期取 `window_start`，必须是合法 ISO 日期并与 `window_start` 一致，主题 slug 稳定且使用小写 ASCII 字母、数字和连字符。`id` 必须等于文件名去掉 `.md`。正文记录计划依据、学习窗口安排、缓冲与调整及完成回顾。仪表盘依据关联 assignment 的真实 `due` 升序排列并计算剩余天数；没有关联 assignment 的计划排在有 DDL 项之后，标记为无硬截止，并按课程标题、窗口起始日、文件路径稳定排序，不推导或伪造 DDL。
 
@@ -87,7 +95,8 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 
 | 字段 | 必填 | 说明 |
 | --- | --- | --- |
-| `id`, `date`, `goal`, `result`, `course` | ✅ | `goal` = 本次练习目的；`result`: `ok` \| `partial` \| `missed`；`course` 必须是已有课程 id |
+| `id`, `date`, `goal`, `course`, `status` | ✅ | `goal` = 本次练习目的；`status`: `new` \| `ing` \| `done` \| `closed`（默认 `new`）；`course` 必须是已有课程 id |
+| `result` | 条件必填 | `ok` \| `partial` \| `missed`；`done` / `closed` 时必填，`new` / `ing` 时可缺省 |
 | `duration_min` | | 数字 |
 | `skills`, `milestone`, `session` | | 关联 id |
 
@@ -101,11 +110,11 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 | --- | --- | --- |
 | `id`, `title`, `course` | ✅ | `course` 是主课程，必须是已有课程 id，且目录必须与之相同 |
 | `target_date` | | ISO |
-| `status` | | `draft` \| `active` \| `done` \| `paused`（默认 active） |
+| `status` | | 缺省表示未完成；仅当 checklist 全部勾选且已有充分证据、用户明确确认时为 `done` |
 | `related_sessions` | | session id 数组；辅助达成该里程碑的课次，可跨 track，缺省视为 `[]` |
 | `related_courses` | | course id 数组；相关课程，缺省视为 `[]` |
 
-进度 = 正文 checklist 中 `- [x]` 占比（rollup 统计，不用手填百分比）。`related_sessions` 与 `related_courses` 是 milestone 指向 session / course 的反向关联，validate 会逐项校验 id 是否存在；缺省即空数组，不报错。
+进度 = 正文 checklist 中 `- [x]` 占比（rollup 统计，不用手填百分比）。完成事件先由 planner 对账：只能更新已有 checklist、提出新 milestone，或因证据不足不改。任何 checklist 勾选、新建 milestone 或写入 `status: done` 都需要证据与用户明确确认；单一 `done` 不自动完成 milestone。`related_sessions` 与 `related_courses` 是 milestone 指向 session / course 的反向关联，validate 会逐项校验 id 是否存在；缺省即空数组，不报错。
 
 路径：`painter-context/6-milestones/<course-id>/ms-<slug>.md`。`related_courses` 可记录其他辅助关联课程，不改变 `course` 所代表的主课程归档。
 

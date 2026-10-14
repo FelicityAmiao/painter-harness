@@ -2,7 +2,7 @@
 id: as-NNN-<slug>
 title: <作业标题>
 due: YYYY-MM-DD
-status: todo
+status: new
 priority: medium
 course: <course-id>
 session:

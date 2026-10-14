@@ -4,7 +4,7 @@ title: Procreate 软件课（剩余 9 段）学习窗口
 course: qingweike-anime
 window_start: 2026-10-01
 window_end: 2026-10-03
-status: planned
+status: ing
 ---
 
 # Procreate 软件课（剩余 9 段）学习窗口

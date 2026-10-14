@@ -6,7 +6,7 @@ type: online
 track: game-art
 start_date:
 end_date:
-status: active
+status: new
 ---
 
 # 轻微课 · 游戏美术（9 个月）

@@ -6,7 +6,7 @@ type: 1v1
 track: foundation
 start_date:
 end_date:
-status: active
+status: ing
 ---
 
 # Procreate 绘画基础（一对一）

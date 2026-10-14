@@ -2,6 +2,7 @@
 id: 2026-10-01-procreate-smudge-layer-modes-toolbar
 date: 2026-10-01
 course: qingweike-anime
+status: done
 instructor:
 duration_min:
 homework:

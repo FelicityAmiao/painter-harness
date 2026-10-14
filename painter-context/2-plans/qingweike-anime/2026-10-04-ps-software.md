@@ -4,7 +4,7 @@ title: PS 软件课（43 段）学习窗口
 course: qingweike-anime
 window_start: 2026-10-04
 window_end: 2026-10-10
-status: planned
+status: new
 ---
 
 # PS 软件课（43 段）学习窗口

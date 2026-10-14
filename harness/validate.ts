@@ -8,6 +8,7 @@ import {
   DIR_PRACTICE,
   DIR_SESSIONS,
   Doc,
+  checklistOf,
   isValidIso,
   load,
   loadSkills,
@@ -22,13 +23,11 @@ interface Issue {
   msg: string;
 }
 
-const COURSE_STATUS = ["planned", "active", "paused", "completed"];
+const WORK_STATUS = ["new", "ing", "done", "closed"];
 const COURSE_TRACK = ["foundation", "illustration", "game-art"];
-const ASSIGNMENT_STATUS = ["todo", "doing", "done", "dropped"];
 const PRIORITY = ["high", "medium", "low"];
 const RESULT = ["ok", "partial", "missed"];
-const MILESTONE_STATUS = ["draft", "active", "done", "paused"];
-const PLAN_STATUS = ["planned", "active", "paused", "completed"];
+const SESSION_STATUS = ["new", "done"];
 const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 
 export function runValidate(): number {
@@ -134,9 +133,7 @@ export function runValidate(): number {
     const file = c.rel;
     if (!c.data.title) push("error", file, "缺少 title");
     base(c, "课程");
-    if (c.data.status !== undefined && c.data.status !== null && c.data.status !== "" && !COURSE_STATUS.includes(String(c.data.status))) {
-      push("error", file, `status="${c.data.status}" 不在枚举 ${COURSE_STATUS.join("|")} 中`);
-    }
+    enumOf(c, "status", WORK_STATUS, true);
     enumOf(c, "track", COURSE_TRACK, true);
     date(c, "start_date", false);
     date(c, "end_date", false);
@@ -146,6 +143,12 @@ export function runValidate(): number {
   for (const s of sessions) {
     base(s, "上课记录");
     date(s, "date", true);
+    enumOf(s, "status", SESSION_STATUS, true);
+    const status = String(s.data.status ?? "");
+    const expectedMarker = status === "new" ? "> 状态：课前预览 · 待上课后补全" : "> 状态：已完成";
+    if (!s.content.includes(expectedMarker)) {
+      push("error", s.rel, `status=${status} 时正文必须包含“${expectedMarker}”`);
+    }
     ref(s, "course", courseIds, "课程", true);
     const course = coursesById.get(s.data.course);
     const sessionParts = s.rel.split("/");
@@ -174,7 +177,7 @@ export function runValidate(): number {
     base(a, "作业");
     if (!a.data.title) push("error", a.rel, "缺少 title");
     date(a, "due", true);
-    enumOf(a, "status", ASSIGNMENT_STATUS, true);
+    enumOf(a, "status", WORK_STATUS, true);
     enumOf(a, "priority", PRIORITY, false, "medium");
     ref(a, "course", courseIds, "课程", true);
     courseDirectory(a, DIR_ASSIGNMENTS);
@@ -187,7 +190,7 @@ export function runValidate(): number {
       push("warning", a.rel, "文件名建议为 as-NNN-<slug>.md");
     }
     const status = String(a.data.status ?? "");
-    if (isValidIso(a.data.due) && !["done", "dropped"].includes(status)) {
+    if (isValidIso(a.data.due) && !["done", "closed"].includes(status)) {
       const left = Math.round((new Date(a.data.due + "T00:00:00").getTime() - new Date(now + "T00:00:00").getTime()) / 86400000);
       if (left < 0) push("warning", a.rel, `已逾期 ${-left} 天（due=${a.data.due}）`);
       else if (left <= 3) push("warning", a.rel, `${left} 天内到期（due=${a.data.due}）`);
@@ -223,7 +226,7 @@ export function runValidate(): number {
     if (isValidIso(p.data.window_start) && isValidIso(p.data.window_end) && p.data.window_start > p.data.window_end) {
       push("error", p.rel, "window_start 不得晚于 window_end");
     }
-    enumOf(p, "status", PLAN_STATUS, true);
+    enumOf(p, "status", WORK_STATUS, true);
   }
 
   for (const p of practices) {
@@ -234,7 +237,10 @@ export function runValidate(): number {
     }
     ref(p, "course", courseIds, "课程", true);
     courseDirectory(p, DIR_PRACTICE);
-    enumOf(p, "result", RESULT, true);
+    enumOf(p, "status", WORK_STATUS, true);
+    const status = String(p.data.status ?? "");
+    const resultRequired = ["done", "closed"].includes(status);
+    enumOf(p, "result", RESULT, resultRequired);
     ref(p, "milestone", milestoneIds, "里程碑");
     ref(p, "session", sessionIds, "上课记录");
     skillsOf(p);
@@ -249,7 +255,13 @@ export function runValidate(): number {
     ref(m, "course", courseIds, "课程", true);
     courseDirectory(m, DIR_MILESTONES);
     date(m, "target_date", false);
-    enumOf(m, "status", MILESTONE_STATUS, false, "active");
+    enumOf(m, "status", ["done"], false);
+    if (m.data.status === "done") {
+      const { done, total } = checklistOf(m.content);
+      if (total === 0 || done !== total) {
+        push("error", m.rel, "status=done 时正文 checklist 必须存在且全部勾选");
+      }
+    }
     skillsOf(m);
     refList(m, "related_sessions", sessionIds, "上课记录");
     refList(m, "related_courses", courseIds, "课程");

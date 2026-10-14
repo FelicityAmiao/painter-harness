@@ -2,6 +2,7 @@
 id: 2026-09-29-procreate-canvas-layers-brushes
 date: 2026-09-29
 course: qingweike-anime
+status: done
 instructor:
 duration_min:
 homework:

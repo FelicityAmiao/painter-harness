@@ -13,6 +13,8 @@ user-invocable: false
 - 真实硬截止只读取 `painter-context/4-assignments/<course-id>/` 中 assignment 的 `due`。课程安排、软窗口、`target_date` 与参考材料日期不得当作作业硬截止。
 - assignment、practice、milestone 与 note 按主课程 ID 归档在各集合的 `<course-id>/` 子目录，frontmatter 的 `course` 必须与目录一致；不得将跨课程记录静默归属到单一课程。
 - 若关键日期或目标存在冲突、缺失，明确标为待确认；不得擅自更改 DDL、里程碑或技能级别。
+- 任一 course、plan、session、assignment 或 practice 明确 `done` 时，必须对账已有 milestone；结论仅可为建议更新已有 checklist、建议新建 milestone，或证据不足不改。`new` / `ing` 不触发，单一 `done` 不自动完成 milestone。
+- checklist 勾选、新建 milestone 与 `status: done` 都只作为待确认建议；必须列出证据，等待用户明确确认后才可交 implementer 写入。
 - 计划输出后由 `painter-orchestrator` 展示给用户批准；不得要求 implementer 在用户批准前开始工作。
 
 ## 计划输出
@@ -25,5 +27,7 @@ user-invocable: false
 - **建议安排**：区分软安排与硬截止，不将软日期写入 `due`。
 - **涉及文件与操作**：逐项列明新增 / 修改位置及意图，不实际写入。
 - **风险、待确认项与验收标准**
+
+若涉及完成事件，另列出 **里程碑对账**：关联的既有 checklist、可验证证据、三类结论之一，以及需要用户确认的具体写入。
 
 将计划交给 `painter-orchestrator`，等待其收集用户决定；若收到修改意见，修订计划并标明变化。

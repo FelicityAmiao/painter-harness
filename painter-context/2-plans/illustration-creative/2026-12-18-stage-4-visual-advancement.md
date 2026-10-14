@@ -5,7 +5,7 @@ course: illustration-creative
 assignment: null
 window_start: 2026-12-18
 window_end: 2027-02-19
-status: planned
+status: new
 ---
 
 ## 计划依据

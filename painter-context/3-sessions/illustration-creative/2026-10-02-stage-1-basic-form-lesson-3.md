@@ -2,9 +2,10 @@
 id: 2026-10-02-stage-1-basic-form-lesson-3
 date: 2026-10-02
 course: illustration-creative
+status: done
 instructor:
 duration_min: 90
-homework:
+homework: 课下丰富画面，主要添加线条和效果
 homework_due:
 assignment:
 skills: [foundation/form]
@@ -12,7 +13,7 @@ skills: [foundation/form]
 
 # 上课 2026-10-02 · 插画创意（一对一） · 阶段 1 基础造型 · 第 3 课
 
-> 状态：课前预览 · 待上课后补全
+> 状态：已完成
 
 ## 预习
 
@@ -41,8 +42,21 @@ flowchart LR
 | 相关历史 | 未发现该课程的前次 session 或相关笔记 | 当前 session 目录原先不存在；notes 目录中没有相关课次材料 |
 | 作业与 DDL | 未发现可关联的 assignment；不填写作业或 due | `painter-context/4-assignments/` 当前只有 README，没有 assignment 记录 |
 
+### 对照
+
+- 命中：实际主题为窗边植物角，学习了有机型画法、疏密、深衬浅、浅衬深，以及叶片的圆、尖、不规则形状和大小变化。
+- 超预期：课下要求丰富画面，主要添加线条和效果。
+
 ## 课堂内容
+
+- 主题：窗边植物角。
+- 学习有机型画法，关注画面中的疏密关系、深衬浅与浅衬深。
+- 叶子可概括为圆、尖、不规则等形状，并注意叶片大小的变化。
+- 课下丰富画面，主要添加线条和效果。
 
 ## 疑问
 
 ## 收获
+
+- 学会用有机型画法表现窗边植物角中的植物形态。
+- 开始关注疏密、深衬浅、浅衬深，以及叶片形状和大小对画面丰富度的作用。

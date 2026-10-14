@@ -5,7 +5,7 @@ course: procreate-basics
 assignment: null
 window_start: 2026-10-01
 window_end: 2026-10-01
-status: planned
+status: done
 ---
 
 ## 计划依据

@@ -17,6 +17,8 @@
 8. 涉及 DDL 变更、里程碑调整、技能树级别升降，先给出依据和方案，用户确认后再改。
 9. 每条练习记录必须有明确的 `goal`（本次目的）——这是"带脑子练习"的抓手，缺失就向用户问清楚。
 10. 全程使用中文。
+11. course、plan、assignment、practice 的状态仅为 `new|ing|done|closed`；session 仅为 `new|done`，且必须与正文状态标识同步；milestone 状态缺省或仅为 `done`。
+12. 任一 course、plan、session、assignment 或 practice 明确 `done` 后，先由 planner 对账 milestone。只可建议更新已有 checklist、提出新 milestone 或证据不足不改；任何 checklist 勾选、新建 milestone 或写入 `status: done` 都要有证据与用户明确确认，单一 `done` 不自动完成 milestone。
 
 ## 命令
 

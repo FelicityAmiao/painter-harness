@@ -36,8 +36,8 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 3. `## 预习` 末尾追加 `### 对照`：预告命中 / 没讲到 / 超预期；
 4. 按课次内容匹配同课程的计划；确认唯一匹配且完成条件有依据后，原地更新计划「完成回顾」中的现有进度行，不另加进度行；不明确时先询问；
 5. 作业带 DDL → 建 `painter-context/4-assignments/<course-id>/as-NNN-<slug>.md`，frontmatter 的 `course` 与目录一致，并与 session **双向回链**；
-6. 若本节 session 属于某里程碑，在 `painter-context/6-milestones/<course-id>/<ms-id>.md` 的 `related_sessions` 中 append session id；course id 首次出现时 append 到 `related_courses`；
-7. 状态标记改为 `> 状态：已完成` → `npm run validate` → 汇报 DDL 倒计时与 `npm run next` 队列位置。
+6. 状态标记改为 `> 状态：已完成`，frontmatter 写 `status: done`；随后交由 planner 对账 milestone。planner 只能建议更新已有 checklist、提出新 milestone，或证据不足不改；任何里程碑写入须有证据和用户明确确认。
+7. `npm run validate` → 汇报 DDL 倒计时与 `npm run next` 队列位置。
 
 ## 铁律
 
@@ -45,5 +45,6 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 - 课前预习和课后更新始终写在同一份 session；course 仅保存课程级资料，不回填单次课记录。
 - session 目录取关联课程的 `id`，即 `painter-context/3-sessions/<course-id>/`；课程 `track`、`type` 和 `provider` 均不决定归档目录。文件名为 `YYYY-MM-DD-<ascii-topic-slug>.md`，日期前缀必须与课程日期及 `date` 字段一致；标题写成“上课 + 日期 + 课程名 + 本次具体主题”，主题必须有依据，slug 应准确概括该主题。主题信息不足时先询问，不猜测或退回宽泛课程名；`id` 必须与文件名 stem 一致。
 - `id` = 文件名去 `.md`；日期一律 ISO `YYYY-MM-DD`；技能只写 skill-tree 表里的 id。
+- session 只使用 `new` / `done`：课前骨架为 `new` 并保留课前预览标记，课后记录为 `done` 并使用已完成标记；不得使用 `ing` / `closed`。
 - 每次写入后必跑 `npm run validate`：error 必须修复，warning 必须向用户明说。
 - 不删除、不覆盖已有上课记录；改期、归档前先征求确认。

@@ -6,7 +6,7 @@ type: online
 track: illustration
 start_date:
 end_date:
-status: active
+status: ing
 ---
 
 # 轻微课 · 二次元插画（9 个月）

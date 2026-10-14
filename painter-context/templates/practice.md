@@ -2,7 +2,8 @@
 id: YYYY-MM-DD-<slug>
 date: YYYY-MM-DD
 goal: <本次练习要达成的目的，必填>
-result: partial
+status: new
+# result: ok|partial|missed（done 或 closed 时必填）
 course: <course-id>
 duration_min:
 skills: []

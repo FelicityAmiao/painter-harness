@@ -34,7 +34,7 @@ interface QueueItem {
 function queue(): QueueItem[] {
   const now = today();
   return load(DIR_ASSIGNMENTS)
-    .filter((a) => ["todo", "doing"].includes(String(a.data.status)) && isValidIso(a.data.due))
+    .filter((a) => ["new", "ing"].includes(String(a.data.status)) && isValidIso(a.data.due))
     .map((a) => {
       const daysLeft = diffDays(now, a.data.due);
       return { doc: a, due: a.data.due, daysLeft, bucket: daysLeft < 0 ? 0 : daysLeft <= 3 ? 1 : 2 };
@@ -159,7 +159,7 @@ export function rollupCmd(): void {
     for (const m of milestones) {
       const { done, total } = checklistOf(m.content);
       const pct = total ? (done / total) * 100 : 0;
-      const status = String(m.data.status ?? "active");
+      const status = m.data.status === "done" ? "已完成" : "未完成";
       const relSessions = Array.isArray(m.data.related_sessions) ? m.data.related_sessions.length : 0;
       const relCourses = Array.isArray(m.data.related_courses) ? m.data.related_courses.length : 0;
       L.push(
@@ -239,7 +239,7 @@ export function rollupCmd(): void {
   if (soon.length) L.push(`- 🟠 3 天内到期 **${soon.length} 项**：${soon.map((q) => `${titleOf(q.doc)}（${q.due}）`).join("、")}`);
   if (!overdue.length && !soon.length) L.push("- ✅ 无逾期、无临期作业");
   const stalled = milestones.filter((m) => {
-    if (String(m.data.status) !== "active") return false;
+    if (m.data.status === "done") return false;
     const hasPractice = practices.some((p) => p.data.milestone === m.data.id);
     const hasSessions = Array.isArray(m.data.related_sessions) && m.data.related_sessions.length > 0;
     const hasCourses = Array.isArray(m.data.related_courses) && m.data.related_courses.length > 0;
