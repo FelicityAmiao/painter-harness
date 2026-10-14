@@ -36,7 +36,7 @@ argument-hint: '[课前|课后] [课程id或日期，可省]'
 3. `## 预习` 末尾追加 `### 对照`：预告命中 / 没讲到 / 超预期；
 4. 按课次内容匹配同课程的计划；确认唯一匹配且完成条件有依据后，原地更新计划「完成回顾」中的现有进度行，不另加进度行；不明确时先询问；
 5. 作业带 DDL → 建 `painter-context/4-assignments/<course-id>/as-NNN-<slug>.md`，frontmatter 的 `course` 与目录一致，并与 session **双向回链**；
-6. 状态标记改为 `> 状态：已完成`，frontmatter 写 `status: done`；随后交由 planner 对账 milestone。planner 只能建议更新已有 checklist、提出新 milestone，或证据不足不改；任何里程碑写入须有证据和用户明确确认。
+6. 状态标记改为 `> 状态：已完成`，frontmatter 写 `status: done`；随后调用 `update-milestone` skill，由其输出里程碑建议。任何里程碑写入仍须有证据和用户明确确认。
 7. `npm run validate` → 汇报 DDL 倒计时与 `npm run next` 队列位置。
 
 ## 铁律

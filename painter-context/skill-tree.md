@@ -20,7 +20,7 @@
 | id | 技能 | 轨道 | 级别 | 说明 |
 | --- | --- | --- | --- | --- |
 | foundation/line | 线条与排线 | 基础 | 0 | 控线稳、准、匀，长短线与排线 |
-| foundation/form | 形体与结构 | 基础 | 0 | 体块概括、比例、透视中的形 |
+| foundation/form | 形体与结构 | 基础 | 1 | 体块概括、比例、透视中的形 |
 | foundation/perspective | 透视 | 基础 | 0 | 一点/两点/三点透视与空间搭建 |
 | foundation/value | 素描与明暗 | 基础 | 0 | 明度层次、光影二分、体积感 |
 | foundation/color | 色彩基础 | 基础 | 0 | 色彩三要素、配色、色调统一 |

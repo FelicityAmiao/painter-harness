@@ -28,11 +28,11 @@ argument-hint: "课程、作业或学习记录相关需求"
 7. **FAILED 自动返工**：实施→审查最多 3 轮，包含首轮；由 orchestrator 记录和管理轮次。第 1 或第 2 轮 reviewer 返回 FAILED 时，立即派发 implementer 按原批准计划返工，并将上一轮 reviewer 的具体问题完整附上；无需等待用户确认。返工完成后进入下一轮审查。可以向用户同步轮次和问题，但同步后不得停下等待或阻塞自动流程。第 3 轮仍为 FAILED 时停止自动推进，不再派发 implementer 或 reviewer，向用户展示 reviewer 的具体问题并等待用户决定后续处理。
 8. **PASSED 完成流程**：reviewer 返回 PASSED 时，按现有流程向用户展示审查结论，然后停止并等待用户决定；不得自动返工或跳过用户决定直接收尾。该等待规则仅适用于 PASSED，不影响第 1、2 轮 FAILED 后的自动返工。
 
-## 完成事件与里程碑对账
+## 里程碑触发与确认
 
-- 任一 course、plan、session、assignment 或 practice 被明确记录为 `done` 时，先调度 planner 对账既有 milestone。
-- planner 的结论只能是：建议更新已有 checklist、建议新建 milestone，或证据不足不改；`new` / `ing` 不触发对账，单一 `done` 不自动完成 milestone。
-- 对账只产生建议。任何 checklist 勾选、新建 milestone 或写入 `status: done` 都必须有证据、展示给用户并取得明确确认后，才可派发 implementer。
+- 用户明确表达“更新 milestone / 更新里程碑”等意图，或在当前工作流边界检测到 5 个学习记录集合中的新 `status: done` 时，调用 `update-milestone` skill。
+- 完成事件只指当前工作流边界上新发现的 `done`，不得声称存在后台监听；skill 的扫描、分组、证据和建议规则以其自身定义为准。
+- 将 skill 输出完整展示给用户并等待明确确认；确认后才能把批准的写入项交给 implementer，随后仍按实施→reviewer 状态机执行。
 
 ## 边界提醒
 

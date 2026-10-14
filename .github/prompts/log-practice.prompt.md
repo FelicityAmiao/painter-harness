@@ -8,7 +8,7 @@ description: 记录一次练习及其目的与反思
 
 1. **采集**：练习日期、所属主课程 ID、**本次练习要达成的目的（goal，必问）**、状态（`new` / `ing` / `done` / `closed`）、时长、涉及技能 ID、结果自评（`ok` 完成 / `partial` 部分 / `missed` 未达成）、过程与反思、是否关联某个里程碑。`done` / `closed` 时 result 必填；课程归属不明确或涉及多门课程时先向用户确认，不自行选择。
 2. **建 practice 文件**：`painter-context/5-practice/<course-id>/YYYY-MM-DD-<slug>.md`，用 `painter-context/templates/practice.md` 结构，frontmatter 填 `id`（= 文件名）、`date`、`goal`、`status`、`result`（条件必填）、`course`、`duration_min`、`skills`、`milestone`（如适用）。正文写过程、反思（哪里用脑了、哪里是机械重复）、下次改进。
-3. **里程碑对账**：practice 明确 `done` 时，由 planner 对账已有 milestone；结论只能是建议更新已有 checklist、提出新 milestone，或证据不足不改。任何 checklist 勾选、新建 milestone 或 `status: done` 都需要证据与用户明确确认。
+3. **里程碑对账**：practice 明确 `done` 时，调用 `update-milestone` skill。里程碑写入必须以 skill 输出为依据，并取得用户明确确认。
 4. **技能树候选**：运行 `npm run rollup`，查看技能树统计中是否出现新的升级候选（仅提示，级别本身留到周复盘再定）。
 5. **校验**：`npm run validate` 无 error。
 6. **汇报**：告知本次 goal 是否达成、距上次练习间隔天数、当前里程碑进度条。

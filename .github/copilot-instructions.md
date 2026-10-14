@@ -18,7 +18,7 @@
 9. 每条练习记录必须有明确的 `goal`（本次目的）——这是"带脑子练习"的抓手，缺失就向用户问清楚。
 10. 全程使用中文。
 11. course、plan、assignment、practice 的状态仅为 `new|ing|done|closed`；session 仅为 `new|done`，且必须与正文状态标识同步；milestone 状态缺省或仅为 `done`。
-12. 任一 course、plan、session、assignment 或 practice 明确 `done` 后，先由 planner 对账 milestone。只可建议更新已有 checklist、提出新 milestone 或证据不足不改；任何 checklist 勾选、新建 milestone 或写入 `status: done` 都要有证据与用户明确确认，单一 `done` 不自动完成 milestone。
+12. 用户明确要求更新 milestone，或当前工作流边界发现课程、计划、课次、作业或练习有新的 `status: done` 时，交由 `.github/skills/update-milestone/SKILL.md` 对账。skill 只输出带证据的建议；任何 checklist 勾选、新建 milestone 或写入 `status: done` 都要有用户明确确认，单一 `done` 不自动完成 milestone。
 
 ## 命令
 
