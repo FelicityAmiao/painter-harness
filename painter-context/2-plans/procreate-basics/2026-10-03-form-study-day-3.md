@@ -29,3 +29,7 @@ status: ing
 ## 完成回顾
 
 已完成 2/7 项；具体完成项尚未确认，不作推断。本计划不代替练习记录。
+
+## 迁移说明
+
+实际作业由 2026-10-11 课后 assignments 承载，详见 [第一组结构素描](../../4-assignments/procreate-basics/as-001-revise-finished-work-perspective.md)、[第二组结构素描](../../4-assignments/procreate-basics/as-002-complete-remaining-structural-sketching.md) 和 [四组静物结构素描](../../4-assignments/procreate-basics/as-003-complete-four-still-life-structural-sketches.md)。本计划保留原有窗口与状态，不承担作业 DDL。

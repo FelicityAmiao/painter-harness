@@ -2,10 +2,10 @@
 id: 2026-10-02-stage-1-basic-form
 title: 插画创意 · 阶段 1 基础造型
 course: illustration-creative
-assignment: null
+assignment: as-001-summer-lemon-drink-color-basics
 window_start: 2026-10-02
 window_end: 2026-10-23
-status: ing
+status: done
 ---
 
 ## 计划依据
@@ -32,3 +32,5 @@ status: ing
 ## 完成回顾
 
 2026-10-02 已完成“窗边植物角”一课：学习有机型画法，重点练习疏密、深衬浅、浅衬深，以及叶片的圆、尖、不规则形状和大小变化。课下继续丰富画面，主要添加线条和效果。
+
+2026-10-10 已完成“夏日柠檬饮色彩作业”：完成大色块画面后的精细线稿与材质刻画，并运用互补色、色相、纯度和明度知识。关联作业：[夏日柠檬饮色彩作业](../../4-assignments/illustration-creative/as-001-summer-lemon-drink-color-basics.md)。

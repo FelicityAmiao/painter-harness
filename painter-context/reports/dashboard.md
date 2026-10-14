@@ -1,6 +1,6 @@
 # 学习仪表盘
 
-> ⏱ 2026-10-15 生成 · `npm run rollup` · 4 课程 · 3 上课 · 0 作业 · 13 计划 · 0 练习 · 2 篇笔记
+> ⏱ 2026-10-15 生成 · `npm run rollup` · 4 课程 · 5 上课 · 4 作业 · 13 计划 · 1 练习 · 5 篇笔记
 
 ## 总体进度（里程碑）
 
@@ -11,13 +11,17 @@
 
 ## 作业队列（DDL 驱动）
 
-（没有进行中的作业）
+| # | DDL | 剩余 | 优先级 | 标题 | 状态 | 文件 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 🟠 2026-10-17 | 剩 2 天 | medium | 修改已完成作品的透视 | new | `painter-context/4-assignments/procreate-basics/as-001-revise-finished-work-perspective.md` |
+| 2 | 🟠 2026-10-17 | 剩 2 天 | medium | 完成剩余结构素描 | new | `painter-context/4-assignments/procreate-basics/as-002-complete-remaining-structural-sketching.md` |
+| 3 | 🟠 2026-10-17 | 剩 2 天 | medium | 完成四个静物结构素描 | new | `painter-context/4-assignments/procreate-basics/as-003-complete-four-still-life-structural-sketches.md` |
 
 ## 课程计划（按真实 DDL）
 
 | 课程 | 计划 | 学习窗口（软安排） | 关联作业 | DDL | 剩余 | 状态 | 文件 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 插画创意（一对一） | 插画创意 · 阶段 1 基础造型 | 2026-10-02 ~ 2026-10-23 | — | 无硬截止 | — | ing | `painter-context/2-plans/illustration-creative/2026-10-02-stage-1-basic-form.md` |
+| 插画创意（一对一） | 插画创意 · 阶段 1 基础造型 | 2026-10-02 ~ 2026-10-23 | 夏日柠檬饮色彩作业 | 2026-10-17 | 剩 2 天 | done | `painter-context/2-plans/illustration-creative/2026-10-02-stage-1-basic-form.md` |
 | 插画创意（一对一） | 插画创意 · 阶段 2 场景构成 | 2026-10-23 ~ 2026-11-27 | — | 无硬截止 | — | new | `painter-context/2-plans/illustration-creative/2026-10-23-stage-2-scene-composition.md` |
 | 插画创意（一对一） | 插画创意 · 阶段 3 人物基础 | 2026-11-20 ~ 2027-01-08 | — | 无硬截止 | — | new | `painter-context/2-plans/illustration-creative/2026-11-20-stage-3-figure-basics.md` |
 | 插画创意（一对一） | 插画创意 · 阶段 4 画面进阶 | 2026-12-18 ~ 2027-02-19 | — | 无硬截止 | — | new | `painter-context/2-plans/illustration-creative/2026-12-18-stage-4-visual-advancement.md` |
@@ -39,7 +43,7 @@
 | foundation/form | 形体与结构 | 基础 | L1 | 0 | — | — |
 | foundation/perspective | 透视 | 基础 | L0 | 0 | — | — |
 | foundation/value | 素描与明暗 | 基础 | L0 | 0 | — | — |
-| foundation/color | 色彩基础 | 基础 | L0 | 0 | — | — |
+| foundation/color | 色彩基础 | 基础 | L1 | 1 | 2026-10-10 | 继续积累 |
 | foundation/composition | 构图 | 基础 | L0 | 0 | — | — |
 | foundation/anatomy | 人体与解剖 | 基础 | L0 | 0 | — | — |
 | illustration/idea | 插画创意 | 插画 | L0 | 0 | — | — |
@@ -56,13 +60,13 @@
 
 ## 本周练习（近 7 天）
 
-- 练习 **0 次** · 累计 **0 分钟** · goal 达成率 **0%**（ok 0 / partial 0 / missed 0）
-- 上课 0 次 · 新笔记 0 篇
-- ⚠️ 还没有任何练习记录
+- 练习 **1 次** · 累计 **120 分钟** · goal 达成率 **100%**（ok 1 / partial 0 / missed 0）
+- 上课 2 次 · 新笔记 3 篇
+- ⚠️ 距上次练习已 **5 天**，建议今天排一次
 
 ## 提醒
 
-- ✅ 无逾期、无临期作业
+- 🟠 3 天内到期 **3 项**：修改已完成作品的透视（2026-10-17）、完成剩余结构素描（2026-10-17）、完成四个静物结构素描（2026-10-17）
 
 ---
 

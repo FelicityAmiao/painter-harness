@@ -29,3 +29,7 @@ status: done
 ## 完成回顾
 
 尚未开始。完成时记录实际完成情况、对体块概括及结构比例关系的收获，以及下一步；本计划不代表练习已完成，也不代替练习记录。
+
+## 迁移说明
+
+实际作业由 2026-10-11 课后 assignments 承载，详见 [第一组结构素描](../../4-assignments/procreate-basics/as-001-revise-finished-work-perspective.md)、[第二组结构素描](../../4-assignments/procreate-basics/as-002-complete-remaining-structural-sketching.md) 和 [四组静物结构素描](../../4-assignments/procreate-basics/as-003-complete-four-still-life-structural-sketches.md)。本计划保留原有窗口与状态，不承担作业 DDL。
