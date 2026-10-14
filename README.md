@@ -74,7 +74,9 @@ painter-harness/
 
 需要整理课程材料、制定学习计划或实施学习数据变更时，可从 `painter-orchestrator` 入口提出需求。它只负责调度，不直接修改学习数据；`painter-researcher` 只读调研课程材料与已有记录，明确区分参考材料和 `painter-context/` 事实源；`painter-planner` 依据已记录事实与 assignment 硬截止制定计划，不写文件；`painter-implementer` 只按明确批准的计划实施；`painter-reviewer` 只读检查改动并运行 `npm run validate`。
 
-流程为「调研 → 规划 → 用户批准计划 → 实施 → 只读审查 → 用户决定」。计划必须先展示并获得用户明确批准，才能进入实施；审查结论无论通过或失败，都会再次等待用户决定，不会自动返工或自动结束。用户要求修改计划时回到 planner；审查后只有用户明确要求修改，才继续实施和重新审查。
+默认流程为「调研 → 规划 → 用户批准计划 → 实施 → 只读审查 → 用户决定」。对于用户明确提出、目标和文件范围清楚、仅修改 `.github/` harness 配置或相关文档的低风险需求，可使用快速通道「直接实施 → 只读审查 → 用户决定」，跳过 researcher 和 planner。快速通道仍必须由 `painter-implementer` 实施并由 `painter-reviewer` 审查，不代表 orchestrator 自行修改或跳过审查。
+
+快速通道要求 orchestrator 能明确列出改动文件、允许范围、禁止事项和验收标准。涉及 `painter-context/` 学习事实、`painter-context/conventions.md`、数据 schema、`harness/validate.ts`、DDL、里程碑、技能树级别、事实状态判断、外部调研、需求取舍、广泛重构或任何破坏性变更时，必须走原有完整流程。审查通过后按状态机结束或清理关联 backlog；审查失败时沿用 retry，达到上限后进入 `ESCALATED`，不会跳过审查或自动宣告完成。用户要求修改计划时回到 planner。
 
 ## 站点预览
 

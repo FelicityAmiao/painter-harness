@@ -1,5 +1,5 @@
 ---
-description: "harness 实施执行：唯一可编写文件的 agent。Use when 被 project-orchestrator 派发，按 planner 的计划（或 reviewer 的修复意见）修改 .github 下的工具文件、harness 脚本或相关文档，并负责写后校验。"
+description: "harness 实施执行：唯一可编写文件的 agent。Use when 被 project-orchestrator 派发，按 planner 的计划、orchestrator 的直接实施简报或 reviewer 的修复意见修改 .github 下的工具文件、harness 脚本或相关文档，并负责写后校验。"
 name: project-implementer
 tools: [read, search, edit, execute, todo]
 user-invocable: false
@@ -26,10 +26,12 @@ user-invocable: false
 
 ## 工作流
 
-1. 读取计划 + 遗留的 reviewer 问题清单。
+1. 读取 planner 计划或 orchestrator 的直接实施简报，以及遗留的 reviewer 问题清单。直接实施简报必须包含明确文件清单、允许范围、禁止事项和验收标准；任一项缺失时停止实施并交回 orchestrator 补齐或改走完整流程。
 2. 逐项实施，同步用 todo 跟踪进度。
 3. 跑 `npm run validate`，修到无 error。
 4. 按输出格式汇报；若 validate 有 warning，明确上报。
+
+收到直接实施简报后，仍须先确认任务没有实际涉及 `painter-context/conventions.md`、数据 schema、`harness/validate.ts`、DDL、里程碑、技能树级别、学习事实或事实状态判断，也没有删除、重命名、覆盖用户数据、批量迁移等破坏性操作。发现任一高风险事项时立即停止，不修改文件，并要求 orchestrator 回到完整流程。
 
 ## 输出格式
 

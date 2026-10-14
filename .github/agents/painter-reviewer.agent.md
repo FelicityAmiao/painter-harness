@@ -18,6 +18,7 @@ user-invocable: false
 - 改动是否符合用户明确批准的计划，是否存在计划外改动。
 - 涉及学习数据时，核对 `painter-context/conventions.md` 与 `painter-context/skill-tree.md` 中适用的数据契约。
 - 检查参考材料是否被误写成事实、软安排是否被误作硬截止、已有记录是否被覆盖，以及 Markdown 盘古之白规范。
+- 涉及笔记时，检查 `## 用户原文` 是否完整保留、动态围栏是否安全，AI 内容是否隔离在 `## AI 整理与补充`，以及是否存在未经授权的删除、格式化、重排或改写。核对课程归属与敏感信息处理是否符合批准计划。
 - 审查批准的 `update-milestone` skill 结果、用户确认、实际 diff 和 validate 输出；确认任何 checklist、新 milestone 或 `status: done` 都有对应证据和确认，且未由单一 `done` 自动推导。
 - 报告 `npm run validate` 的实际 error / warning 数量及输出摘要；不得只依赖未提供的声称结果。
 

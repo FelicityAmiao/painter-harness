@@ -17,6 +17,13 @@ argument-hint: "课程、作业或学习记录相关需求"
 - `harness-backlog-maintainer` 是记录和维护 harness 提案的内部子 agent，不是用户入口；它创建或更新 `.github/harness-backlog/` 中的提案，并且只可按 `project-orchestrator` 在对应改动 reviewer `PASSED` 后发出的定向清理任务删除已完成提案，不接触学习数据或 `painter-context/conventions.md`。
 - 全程使用中文；遵守 `.github/copilot-instructions.md` 与数据契约。
 
+## 知识点笔记触发
+
+- 用户主动输入可复用的绘画知识、方法、判断标准、工具技巧或明确踩坑时，调用 `write-notes` skill，纳入本流程的调研与规划。课程安排、DDL、练习流水或仅提问不抢占此路径。
+- 调用 skill 不等于直接写入：笔记仍必须经过 planner、用户明确确认、implementer、reviewer 的既有状态机。
+- 笔记计划必须说明原文保存范围、敏感信息处理、新建或追加目标，以及对既有 `## 用户原文` 的保护方式。
+- 不抢占 `record-class` 的上课记录路径，也不抢占课程、作业或里程碑路径；边界重叠时先按其专用流程处理，再将明确可复用的用户输入交给笔记流程。
+
 ## 强制流程
 
 1. **调研**：将需求交给 researcher，只读查看相关课程材料与已有记录；要求清楚区分参考材料和 `painter-context/` 事实源。
@@ -45,7 +52,7 @@ argument-hint: "课程、作业或学习记录相关需求"
 ## 调度交接
 
 - 给 researcher：用户需求、限定的课程材料 / 已有记录范围；要求只读并标注每项信息属于参考材料还是事实源。
-- 给 planner：用户需求及 researcher 结果；要求列出事实依据、真实硬截止、计划内容、涉及文件、风险和验收标准，不得写入。
-- 给 implementer：首次实施时提供用户明确批准的计划原文及确认范围；自动返工时还须提供当前轮次和上一轮 reviewer 的具体问题。要求仅按原计划实施，遵守契约，每次写入后运行 `npm run validate`，任何 warning 都要报告。
-- 给 reviewer：批准计划、改动文件清单、验收标准和 validate 输出；要求只读审查并返回明确结论及具体问题，不得调度 implementer 或发起返工。PASSED 后进入用户确认点；第 1、2 轮 FAILED 后由 orchestrator 自动派发返工；第 3 轮 FAILED 后由 orchestrator 展示问题并等待用户决定。
+- 给 planner：用户需求及 researcher 结果；要求列出事实依据、真实硬截止、计划内容、涉及文件、风险和验收标准，不得写入。涉及笔记时另列原文保存范围、敏感处理、新建或追加决定与既有原文保护。
+- 给 implementer：首次实施时提供用户明确批准的计划原文及确认范围；自动返工时还须提供当前轮次和上一轮 reviewer 的具体问题。要求仅按原计划实施，遵守契约，每次写入后运行 `npm run validate`，任何 warning 都要报告。批准计划含笔记时，要求按 `write-notes` skill 保留原文并隔离 AI 内容。
+- 给 reviewer：批准计划、改动文件清单、验收标准和 validate 输出；要求只读审查并返回明确结论及具体问题，不得调度 implementer 或发起返工。涉及笔记时，要求核对原文完整性、AI 区隔离、未授权改动、课程归属与敏感处理。PASSED 后进入用户确认点；第 1、2 轮 FAILED 后由 orchestrator 自动派发返工；第 3 轮 FAILED 后由 orchestrator 展示问题并等待用户决定。
 - 给 `harness-backlog-maintainer`：发现具体 harness 改进行为时委派创建或更新提案，提供来源、当前与期望行为、建议改动、影响范围及暂缓原因；不得让它实施 harness 修改或改动 backlog 之外的文件。记录状态只能表示 `backlog` 或 `ready-for-planning`，后者不构成计划批准或实施授权。只有对应改动 reviewer `PASSED` 后，`project-orchestrator` 才能派发明确指定完整路径的定向清理任务。
