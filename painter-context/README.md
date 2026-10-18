@@ -13,6 +13,7 @@
 | `5-practice/<course-id>/` | 按主课程归档的练习记录（已发生事实） |
 | `6-milestones/<course-id>/` | 按主课程归档的里程碑 checklist |
 | `notes/<course-id>/` | 按主课程归档的知识点笔记（AI 汇总） |
+| `references/` | 跨课程的全局参考资料与路线映射，不是个人学习事实 |
 | `templates/` | 录入模板 |
 | `reports/` | 脚本生成的汇总，禁止手改 |
 
@@ -42,6 +43,7 @@ flowchart LR
 | `3-sessions/` | `5-practice/<course-id>/` | session 记录一次上课（发生过的课）；practice 记录一次自主练习，两者都是已发生事实，互不冒充。 |
 | `6-milestones/<course-id>/` | `4-assignments/<course-id>/` | milestone 是阶段结果与 checklist，不携带 DDL；assignment 是带 `due` 的交付任务，不属于 milestone。 |
 | `4-assignments/<course-id>/` | `notes/<course-id>/` | assignment 是待交付任务；作业完成后可把可复用知识沉淀成同课程的 `notes/`，二者不会互相替代。 |
+| `references/` | `notes/<course-id>/` | reference 是跨课程参考资料；不得因内容涉及某门课而静默归入课程笔记。 |
 
 事实与计划分层：
 
@@ -63,3 +65,5 @@ flowchart LR
 assignment、practice、milestone 与 note 均按主课程归档到 `<集合>/<course-id>/`，frontmatter 的 `course` 必须与目录名一致。录入方式：让 AI 执行 `.github/prompts/` 下的 prompt，或直接复制 `templates/` 模板填写。写完跑 `npm run validate`。
 
 课程目标或阶段计划按项新建 `2-plans/` 中的文件，窗口日期可按实际情况调整；计划总览由 `npm run rollup` 生成到 `reports/dashboard.md`，不手改报告。
+
+全局路线和跨课程参考资料放在 `references/`。其中的阶段、年限和候选映射不自动生成或完成 milestone，也不自动升级 skill-tree；后续变更必须回到已有课程、session、practice、作品证据和用户确认。

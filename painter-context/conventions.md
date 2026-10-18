@@ -15,6 +15,7 @@
 | `painter-context/5-practice/<course-id>/` | 按主课程归档的每次练习记录 | `YYYY-MM-DD-<slug>.md` |
 | `painter-context/6-milestones/<course-id>/` | 按主课程归档的里程碑（checklist + 进度条） | `ms-<slug>.md` |
 | `painter-context/notes/<course-id>/` | 按主课程归档的知识点笔记（AI 汇总） | `<slug>.md` |
+| `painter-context/references/` | 跨课程的全局参考资料与路线映射，不是个人学习事实 | `<slug>.md` |
 | `painter-context/templates/` | 录入模板（内容根内子目录） | — |
 | `painter-context/reports/` | 脚本生成的汇总，禁止手改（内容根内子目录） | — |
 
@@ -126,6 +127,16 @@ DDL 变更时在正文追加变更记录行：`- YYYY-MM-DD 调整为 X，原因
 | `skills`, `sources`, `created` | | 技能、来源与创建日期 |
 
 路径：`painter-context/notes/<course-id>/<slug>.md`。笔记中的 Markdown 相对链接以笔记所在课程目录为起点。
+
+### reference（`painter-context/references/`）
+
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `id`, `title` | ✅ | `id` 必须等于文件名去掉 `.md` |
+| `type` | ✅ | 固定为 `reference` |
+| `scope` | ✅ | 固定为 `global`；不得填写 `course` |
+
+reference 是独立浏览的跨课程资料，不属于任何课程的 note、plan 或学习事实。阶段、年限和路线建议只能作为参考上下文；不得替代真实的 session、practice、作品证据、作业 DDL 或个人规划日期。路线页可以维护“阶段 → 能力域 → 建议证据 → milestone 候选 → skill-tree 候选”映射，但 milestone 候选不能自动创建、勾选或完成，skill-tree 候选不能自动改级。实际 milestone 仍须绑定已有课程并经用户确认；技能级别仍遵循 `skill-tree.md` 的 L0–L5 规则。
 
 ## 文件流转
 

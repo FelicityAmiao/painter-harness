@@ -14,6 +14,7 @@ export const DIR_ASSIGNMENTS = `${CONTENT_ROOT}/4-assignments`;
 export const DIR_PRACTICE = `${CONTENT_ROOT}/5-practice`;
 export const DIR_MILESTONES = `${CONTENT_ROOT}/6-milestones`;
 export const DIR_NOTES = `${CONTENT_ROOT}/notes`;
+export const DIR_REFERENCES = `${CONTENT_ROOT}/references`;
 export const DIR_REPORTS = `${CONTENT_ROOT}/reports`;
 export const DIR_TEMPLATES = `${CONTENT_ROOT}/templates`;
 
@@ -30,6 +31,13 @@ export interface SkillRow {
   track: string;
   level: number;
   desc: string;
+}
+
+export interface ReferenceRow {
+  id: string;
+  title: string;
+  type: "reference";
+  scope: "global";
 }
 
 const DEFAULT_SKIP = new Set(["node_modules", "dist", ".git"]);

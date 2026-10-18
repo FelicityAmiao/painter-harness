@@ -6,6 +6,7 @@ import {
   DIR_NOTES,
   DIR_PLANS,
   DIR_PRACTICE,
+  DIR_REFERENCES,
   DIR_SESSIONS,
   Doc,
   checklistOf,
@@ -43,6 +44,7 @@ export function runValidate(): number {
   const practices = load(DIR_PRACTICE);
   const milestones = load(DIR_MILESTONES);
   const notes = load(DIR_NOTES);
+  const references = load(DIR_REFERENCES);
 
   const courseIds = new Set(courses.map((c) => c.data.id));
   const coursesById = new Map(courses.map((c) => [c.data.id, c]));
@@ -274,11 +276,19 @@ export function runValidate(): number {
     courseDirectory(n, DIR_NOTES);
   }
 
+  for (const r of references) {
+    base(r, "参考资料");
+    if (!r.data.title) push("error", r.rel, "缺少 title");
+    enumOf(r, "type", ["reference"], true);
+    enumOf(r, "scope", ["global"], true);
+    if (r.data.course !== undefined) push("error", r.rel, "全局参考资料不得填写 course");
+  }
+
   /* ---- 输出 ---- */
   const errors = issues.filter((i) => i.level === "error");
   const warnings = issues.filter((i) => i.level === "warning");
 
-  console.log(`\n🔎 validate：${courses.length} 课程 / ${sessions.length} 上课 / ${assignments.length} 作业 / ${plans.length} 计划 / ${practices.length} 练习 / ${milestones.length} 里程碑 / ${notes.length} 笔记\n`);
+  console.log(`\n🔎 validate：${courses.length} 课程 / ${sessions.length} 上课 / ${assignments.length} 作业 / ${plans.length} 计划 / ${practices.length} 练习 / ${milestones.length} 里程碑 / ${notes.length} 笔记 / ${references.length} 参考资料\n`);
   for (const i of errors) console.log(`  ❌ ${i.file} — ${i.msg}`);
   for (const i of warnings) console.log(`  ⚠️  ${i.file} — ${i.msg}`);
   if (errors.length === 0 && warnings.length === 0) console.log("  ✅ 全部通过");
