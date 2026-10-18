@@ -2,7 +2,7 @@
 id: as-002-complete-remaining-structural-sketching
 title: 第二组结构素描
 due: 2026-10-17
-status: new
+status: closed
 priority: medium
 course: procreate-basics
 session: 2026-10-11-perspective-structural-sketching
@@ -24,3 +24,4 @@ estimate_hours:
 - 6 项结构素描成稿：灭火器、生抽、存储罐、汽油罐、存储瓶、左右朝向的红酒瓶。
 
 ## 变更记录
+- 2026-10-19 暂不继续，暂缓处理，作业未完成；后续需要时再更新。

@@ -2,7 +2,7 @@
 id: as-001-revise-finished-work-perspective
 title: 第一组结构素描
 due: 2026-10-17
-status: new
+status: closed
 priority: medium
 course: procreate-basics
 session: 2026-10-11-perspective-structural-sketching
@@ -52,3 +52,4 @@ estimate_hours:
 - 有转角的照相机：已修改旧稿透视。
 
 ## 变更记录
+- 2026-10-19 暂不继续，暂缓处理，作业未完成；后续需要时再更新。

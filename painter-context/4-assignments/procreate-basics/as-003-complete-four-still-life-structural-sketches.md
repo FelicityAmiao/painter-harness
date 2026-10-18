@@ -2,7 +2,7 @@
 id: as-003-complete-four-still-life-structural-sketches
 title: 完成四个静物结构素描
 due: 2026-10-17
-status: new
+status: closed
 priority: medium
 course: procreate-basics
 session: 2026-10-11-perspective-structural-sketching
@@ -24,3 +24,4 @@ estimate_hours:
 - 4 组静物结构素描成稿，每组包含葡萄酒瓶与其他物体。
 
 ## 变更记录
+- 2026-10-19 暂不继续，暂缓处理，作业未完成；后续需要时再更新。
