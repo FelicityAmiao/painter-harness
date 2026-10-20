@@ -8,36 +8,51 @@ description: 只读调研小红书账号内容，并在逐帖确认后将提炼�
 ## 目标与边界
 
 - 通过工作区 MCP 配置中的 `xiaohongshu` 服务只读访问小红书；优先使用免登录能力，只有 MCP 明确要求时才使用登录态备用能力。
-- `.mcp.json` 仅注册 `http://localhost:18060/mcp`；用户需先启动 `xpzouying/xiaohongshu-mcp` 本地服务。当前仓库不验证连接，也不自动安装或启动该服务。
+- `.vscode/mcp.json` 仅注册 `http://localhost:18060/mcp`；用户需先启动 `xpzouying/xiaohongshu-mcp` 本地服务。当前仓库不验证连接，也不自动安装或启动该服务。
 - MCP 只用于外部参考调研，不把小红书帖子直接当作 `painter-context/` 事实源。
-- 不保存帖子原文、媒体、评论、cookies 或 token；只在用户逐帖确认后保存提炼出的 painter 记录。
-- 不绕过 `painter-orchestrator` 的 researcher → planner → 用户确认 → implementer → reviewer 流程。
+- 本 skill 是发现、提炼和逐候选确认的入口，不自动写入 painter 记录。用户确认候选只表示可以进入既有计划流程，不等于授权实施。
+- 不保存帖子原文、媒体、评论、cookies 或 token；只有用户明确选择保存并确认精确摘录后，才可按既有笔记流程保存该摘录。
+- 写入交接必须通过既有 `painter-orchestrator` 的 researcher → planner → 用户确认 → implementer → reviewer 流程，不得绕过计划、用户确认或 reviewer。
 
 ## 获取与发现
 
-1. 先读取账号主页：[`小红书账号主页`](https://www.xiaohongshu.com/user/profile/6a52119f000000000f03ac02?xsec_token=ABWw_ZDYvpvZMFkWaB5ur6DOOrE1RnNCaLTrNqxzVnzig=&xsec_source=pc_user)。
-2. 通过主页结果发现帖子，再逐条读取候选帖子的详情；每条候选必须保留可核对的 `post_id`、来源 URL、发布时间和标题 / 摘要事实。
-3. 若主页发现或单帖读取失败，报告失败原因和不确定项，不用猜测内容，也不推进同步游标。
+1. 先读取账号主页：[`小红书账号主页`](https://www.xiaohongshu.com/user/profile/6a52119f000000000f03ac02)。
+2. 遍历主页的全部列表分页，记录发现的每个 `post_id`，再逐条读取帖子详情并提炼候选项。确认内容时展示可核对的 `post_id`、来源 URL、发布时间、事实摘要和不确定项；这些展示内容不得写入状态元数据。
+3. 详情读取失败时，将该 `post_id` 登记为待重试；分页失败时报告失败和不确定项，不猜测未读取内容。列表发现的每个 `post_id` 都必须已处理或登记待重试，才能记作已完整扫描。
 
 ## 增量窗口
 
-- 首次 `sync_after = 2026-10-17T00:00:00+08:00`。
-- 后续同步以下次查询起点为“上次成功同步时间减去重叠窗口”：`sync_after = last_sync_at - overlap_window`，其中 `overlap_window = 48h`。
-- 只纳入严格满足 `published_at > sync_after` 的帖子；使用发布时间判断，不使用抓取时间或排序位置替代。
-- 以 `post_id` 去重。已确认或已拒绝的 `post_id` 不重复提交确认；同一帖子不得因重叠窗口生成多条 painter 记录。
-- 只有候选读取完成、用户逐帖确认结果已记录且对应写入流程成功后，才更新 `last_sync_at`。任何失败都保持原游标不变。
+- 首次扫描基准为 `scan_watermark_at = 2026-10-17T00:00:00+08:00`。
+- 扫描水位只代表列表分页已完整遍历，且本轮发现的每个帖子 ID 均已处理或登记进待重试队列；它与逐候选确认、拒绝、提交状态独立。
+- 仅在分页完整且所有发现项都已记账后推进 `scan_watermark_at`。分页失败或任何发现项未能记账时，不推进水位。详情读取失败可以登记待重试，因此不必阻塞其他发现项及符合条件的水位推进。
+- 后续查询起点为 `sync_after = scan_watermark_at - overlap_window`，其中 `overlap_window = 48h`。只纳入严格满足 `published_at > sync_after` 的帖子；使用发布时间判断，不使用抓取时间或排序位置替代。
+- 帖子级只追踪发现、待读取 / 待重试、已记账状态；“已记账”只表示发现项已有可恢复的元数据，不代表其候选已确认或写入。
+- 以 `post_id` 合并帖子记录，为每个候选分配并复用稳定的 `candidate_id`；重叠扫描时合并新候选，不得覆盖或丢弃同帖已有的待确认、暂缓、失败或正在原有计划流程中的候选。待重试队列也须独立于新扫描继续处理。
 
-## 逐帖确认协议
+## 逐候选处理协议
 
-对每篇候选单独展示：
+一个帖子可以拆分为多个候选记录；为每个候选分配稳定的 `candidate_id`，分别追踪确认、拒绝和提交状态，不以帖子状态代替候选状态。候选状态包括：
 
-- `post_id`、来源 URL、发布时间；
-- 帖子事实摘要和明确标注的不确定项；
-- 建议归类：`session`、`assignment`、`practice` 或 `note`；
-- 建议关联课程、技能和记录目标；缺少课程或 `practice` 的 `goal` 时必须询问。
+- `pending_confirmation`：待用户逐项确认；
+- `deferred`：用户暂缓，保留待办；
+- `failed`：读取、提炼或交接失败，保留待办并说明失败点；
+- `confirmed`：用户确认该候选可进入计划流程，不代表授权实施；
+- `submitted`：对应写入完成且 `npm run validate` 成功后才可标记；
+- `rejected`：用户拒绝，终态，不再重复请求确认。
 
-等待用户对每篇帖子逐条明确确认、拒绝或要求修改。批量同意、沉默、继续对话和“看起来可以”都不算确认。确认前不得写入 `painter-context/`。
+逐项展示候选的 `candidate_id`、`post_id`、来源 URL、发布时间、事实摘要及不确定项、建议类别（`session`、`assignment`、`practice` 或 `note`）和建议关联信息。用户可逐项确认、拒绝、暂缓或要求修改；批量同意、沉默、继续对话和“看起来可以”都不算确认。拒绝状态不可因后续重叠扫描复活；暂缓和失败项必须继续保留待办。
+
+分类和交接必须遵守以下边界：
+
+- `session` 日期由用户确认，不能用发帖时间代替。
+- 不得根据帖子推断 `assignment` 的 `due`；只有用户明确提供并确认的真实截止日期才可进入计划。
+- `practice` 缺少明确 `goal` 时必须询问，不得自行补造。
+- `note` 仅能保存用户选择保存并确认的精确摘录；不得把整帖当作 `write-notes` 的用户原文。
+- 候选确认后，交由既有 painter planner 整理计划并再次等待用户确认；只有获批计划才能交给 implementer。不得在本 skill 中自动写入 `painter-context/` 或将候选确认视为实施授权。
+- 候选只有在计划授权的写入完成且 `npm run validate` 成功后才能从待办转为 `submitted`；写入或校验失败时保留未提交状态并记录失败，以便恢复。
 
 ## 状态元数据
 
-默认运行时状态路径为 `.github/state/xiaohongshu-sync.json`，只保存主页 URL、首次基准、成功游标、重叠小时数和已确认 / 拒绝的 `post_id`。不得把帖子正文或媒体写入状态文件。若状态文件不可写，仍可只读调研，但不得声称已成功同步或推进游标。
+默认运行时状态路径为 `.github/state/xiaohongshu-sync.json`。状态只保存恢复流程所需元数据：规范化后的主页 URL、首次基准、`scan_watermark_at`、重叠小时数、`post_id`、来源 URL、发布时间、候选 `candidate_id` / 类别 / 状态，以及必要的待重试标记和失败原因。持久化前必须从主页 URL 中移除所有鉴权或访问令牌查询参数，尤其是 `xsec_token`；如 MCP 调用当下确需 token，只能从当前工具结果或用户当次输入获取，并仅用于当次请求，不得猜测或复用旧 token，也不得复制到 skill、状态、记录、日志或待办队列。MCP 调用所需 token 不得保存到状态或长期记录。不得保存标题、正文、摘要正文、原文摘录、媒体、评论或 cookies。
+
+重试时根据 `post_id` 重新读取来源，再继续处理对应候选；不得依赖已保存的帖子内容。状态文件不可写时仍可只读调研，但必须报告无法持久化待办，不得声称水位或处理状态已成功保存。
