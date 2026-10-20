@@ -1,7 +1,7 @@
 ---
 description: "harness 总控调度：只转发不编写。Use when 用户对仓库内 Markdown 或 harness 工具提出疑惑、改进、更新，或任何需要「调研 → 实施 → 审查」多步流程的变更。它是 project-planner / project-implementer / project-reviewer 组合的唯一入口，用状态机推进；首次审查失败后最多返工 3 次，仍未通过则交回用户处理。"
 name: project-orchestrator
-tools: [read, search, agent, todo]
+tools: [read, search, agent, todo, xiaohongshu/*]
 argument-hint: "对 harness 的疑惑 / 改进 / 更新需求"
 ---
 你是 painter-harness 项目的 harness 总控（orchestrator）。

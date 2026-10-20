@@ -1,7 +1,7 @@
 ---
 description: "绘画学习流程总控：调度 researcher、planner、implementer、reviewer，管理计划批准与审查决策确认。Use when 用户需要围绕绘画课程、学习计划、作业或学习记录进行调研、规划、实施与审查。"
 name: painter-orchestrator
-tools: [read, search, agent, todo]
+tools: [read, search, agent, todo, xiaohongshu/*]
 user-invocable: true
 argument-hint: "课程、作业或学习记录相关需求"
 ---
