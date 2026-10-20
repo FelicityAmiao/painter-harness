@@ -16,8 +16,15 @@
 | `painter-context/6-milestones/<course-id>/` | 按主课程归档的里程碑（checklist + 进度条） | `ms-<slug>.md` |
 | `painter-context/notes/<course-id>/` | 按主课程归档的知识点笔记（AI 汇总） | `<slug>.md` |
 | `painter-context/references/` | 跨课程的全局参考资料与路线映射，不是个人学习事实 | `<slug>.md` |
+| `painter-context/assets/<集合>/<course-id>/` | 按内容集合与课程归档的图片等资源 | 与对应内容集合、课程 id 一致 |
 | `painter-context/templates/` | 录入模板（内容根内子目录） | — |
 | `painter-context/reports/` | 脚本生成的汇总，禁止手改（内容根内子目录） | — |
+
+## 图片资源
+
+- 课程相关图片统一存放在 `painter-context/assets/<集合>/<course-id>/`，集合名与对应内容目录一致，课程目录使用主课程 id；全局参考资料图片存放在 `painter-context/assets/references/`。
+- Markdown 图片使用标准语法和相对路径，路径以 Markdown 文件所在目录为起点。`npm run validate` 会检查仓库内 Markdown 的本地图片路径是否存在；外部 URL 不校验。
+- `npm run build` 会将仓库内可识别的本地图片内嵌到单文件站点。`painter-context/assets/` 不参与内容导航。
 
 ## 通用规则
 

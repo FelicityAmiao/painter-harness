@@ -34,4 +34,4 @@ status: new
 
 课程目标涵盖角色立绘设计、日系与韩式主题创作，以及商业约稿和卡牌项目经验。课程大纲截图：
 
-![轻微课游戏美术角色原画班课程大纲](assets/course-game-artist.png)
+![轻微课游戏美术角色原画班课程大纲](../assets/1-courses/qingweike-game-art/course-game-artist.png)

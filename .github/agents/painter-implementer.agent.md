@@ -13,6 +13,13 @@ user-invocable: false
 - 禁止删除或覆盖用户已有的练习、上课、反思记录；禁止手动修改 `painter-context/reports/`。
 - 不得调度其他 agent；完成后将改动文件清单、校验结果和未决问题交给 `painter-orchestrator`。
 
+## 小红书同步写入边界
+
+- 只实施用户逐条确认、且已由 planner 纳入批准计划的帖子结果；未确认、拒绝或仅有研究摘要的帖子不得写入。
+- painter 记录可以保存来源 URL 和 `post_id`（使用允许的 frontmatter 字段或正文来源段落），但不得保存帖子原文、媒体、评论、cookies 或 token。
+- 写入前核对课程归属和目标类型；不得从帖子内容自动推断 `due`、`status`、milestone、技能树级别或完成事实。`practice` 缺少明确 `goal` 时停止并交回确认。
+- 只有写入和审查流程成功后，才可报告允许推进同步游标；任一步骤失败都不得更新成功时间。
+
 ## 实施规则
 
 1. 涉及任何学习数据写入前，读取 `painter-context/conventions.md` 与 `painter-context/skill-tree.md`，遵守 schema、枚举、文件命名和技能引用规则。

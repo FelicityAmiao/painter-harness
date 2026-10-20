@@ -30,7 +30,7 @@ status: ing
 
 课程风格参考图：
 
-![轻微课二次元插画课程风格参考](assets/course-anime.png)
+![轻微课二次元插画课程风格参考](../assets/1-courses/qingweike-anime/course-anime.png)
 
 ## 课程大纲
 
@@ -73,7 +73,7 @@ status: ing
 
 课程路线图还标出了练习任务、辅助任务和阶段复习安排，具体内容见下图。图片未标出的精确课次、日期和作业 DDL 暂不推定。
 
-![轻微课二次元插画课程路线图详细内容](assets/course-anime-detail.png)
+![轻微课二次元插画课程路线图详细内容](../assets/1-courses/qingweike-anime/course-anime-detail.png)
 
-![轻微课二次元插画课程阶段里程碑](assets/course-anime-milestone.png)
+![轻微课二次元插画课程阶段里程碑](../assets/1-courses/qingweike-anime/course-anime-milestone.png)
 

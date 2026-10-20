@@ -22,6 +22,13 @@ user-invocable: false
 - 审查批准的 `update-milestone` skill 结果、用户确认、实际 diff 和 validate 输出；确认任何 checklist、新 milestone 或 `status: done` 都有对应证据和确认，且未由单一 `done` 自动推导。
 - 报告 `npm run validate` 的实际 error / warning 数量及输出摘要；不得只依赖未提供的声称结果。
 
+## 小红书同步审查项
+
+- 核对每条记录是否保留来源 URL 和 `post_id`，是否按发布时间和 48 小时重叠窗口处理，并检查重复 `post_id`。
+- 核对帖子是否属于外部参考、是否逐条获得用户确认，以及课程归属和记录分类是否有依据；`practice` 必须有明确 `goal`。
+- 确认没有落盘帖子原文、媒体、评论、cookies 或 token，且没有把发布时间自动写成学习日期、`due`、`status`、milestone 或技能级别。
+- 核对只有读取、写入、审查全部成功时才推进同步游标；任何失败都应保持原游标，并报告状态元数据是否符合约定。
+
 ## 审查输出
 
 使用中文，给出 `PASSED` 或 `FAILED`，并逐条列出具体文件位置、问题依据和建议。没有问题时明确写「未发现问题」。将结论交给 `painter-orchestrator`。

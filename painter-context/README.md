@@ -14,8 +14,11 @@
 | `6-milestones/<course-id>/` | 按主课程归档的里程碑 checklist |
 | `notes/<course-id>/` | 按主课程归档的知识点笔记（AI 汇总） |
 | `references/` | 跨课程的全局参考资料与路线映射，不是个人学习事实 |
+| `assets/` | 按内容集合与课程分类存放图片等资源 |
 | `templates/` | 录入模板 |
 | `reports/` | 脚本生成的汇总，禁止手改 |
+
+图片资源统一存放在 `assets/<集合>/<course-id>/`，并从 Markdown 文件使用相对路径引用。全局参考资料使用 `assets/references/`。`npm run validate` 会检查本地图片路径；`npm run build` 会将本地图片内嵌到单文件站点中，资源目录不会进入内容导航。
 
 ## 生命周期
 

@@ -1,5 +1,8 @@
+import fs from "node:fs";
 import path from "node:path";
+import { marked } from "marked";
 import {
+  CONTENT_ROOT,
   DIR_ASSIGNMENTS,
   DIR_COURSES,
   DIR_MILESTONES,
@@ -13,6 +16,7 @@ import {
   isValidIso,
   load,
   loadSkills,
+  ROOT,
   today,
   toPosix,
 } from "./lib";
@@ -30,6 +34,52 @@ const PRIORITY = ["high", "medium", "low"];
 const RESULT = ["ok", "partial", "missed"];
 const SESSION_STATUS = ["new", "done"];
 const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
+
+function validateLocalImages(push: (level: Level, file: string, msg: string) => void): void {
+  const contentRoot = path.join(ROOT, CONTENT_ROOT);
+  const stack = [contentRoot];
+  const markdownFiles: string[] = [];
+
+  while (stack.length > 0) {
+    const dir = stack.pop()!;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const abs = path.join(dir, entry.name);
+      if (entry.isDirectory()) stack.push(abs);
+      else if (entry.isFile() && entry.name.toLowerCase().endsWith(".md")) markdownFiles.push(abs);
+    }
+  }
+
+  for (const abs of markdownFiles) {
+    const rel = toPosix(path.relative(ROOT, abs));
+    const tokens = marked.lexer(fs.readFileSync(abs, "utf8"));
+    marked.walkTokens(tokens, (token) => {
+      if (token.type !== "image") return;
+      const href = token.href;
+      if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(href)) return;
+
+      let decoded: string;
+      try {
+        decoded = decodeURIComponent(href);
+      } catch {
+        push("error", rel, `图片路径 URL 编码无效：${href}`);
+        return;
+      }
+      const imagePath = decoded.split(/[?#]/, 1)[0];
+      if (!imagePath) {
+        push("error", rel, "本地图片路径不能为空");
+        return;
+      }
+
+      const target = path.resolve(path.dirname(abs), imagePath);
+      const relativeTarget = path.relative(ROOT, target);
+      if (relativeTarget === ".." || relativeTarget.startsWith(`..${path.sep}`) || path.isAbsolute(relativeTarget)) {
+        push("error", rel, `本地图片路径不得越出仓库根目录：${href}`);
+      } else if (!fs.existsSync(target) || !fs.statSync(target).isFile()) {
+        push("error", rel, `本地图片不存在：${href}`);
+      }
+    });
+  }
+}
 
 export function runValidate(): number {
   const issues: Issue[] = [];
@@ -283,6 +333,8 @@ export function runValidate(): number {
     enumOf(r, "scope", ["global"], true);
     if (r.data.course !== undefined) push("error", r.rel, "全局参考资料不得填写 course");
   }
+
+  validateLocalImages(push);
 
   /* ---- 输出 ---- */
   const errors = issues.filter((i) => i.level === "error");

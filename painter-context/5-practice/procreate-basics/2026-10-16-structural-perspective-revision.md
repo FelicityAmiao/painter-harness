@@ -2,7 +2,7 @@
 id: 2026-10-16-structural-perspective-revision
 date: 2026-10-16
 goal: 练习在三点透视和结构素描中用基础体块、辅助线与面关系校正物体结构和透视方向
-status: ing
+status: closed
 result: partial
 course: procreate-basics
 skills: [foundation/form, foundation/perspective]
@@ -21,4 +21,4 @@ skills: [foundation/form, foundation/perspective]
 
 ## 下次改进
 
-继续完成 as-001 剩余项目。
+本条练习按当前部分结果关闭，不再安排继续完成 as-001 剩余项目。

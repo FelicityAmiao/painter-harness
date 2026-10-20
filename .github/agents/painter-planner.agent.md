@@ -16,6 +16,13 @@ user-invocable: false
 - 里程碑对账由 `update-milestone` skill 负责；本 agent 不复制其扫描、判定或写入规则。
 - 计划输出后由 `painter-orchestrator` 展示给用户批准；不得要求 implementer 在用户批准前开始工作。
 
+## 小红书帖子分类
+
+- 对同步来的每篇帖子分别提出一种记录分类建议：`session`、`assignment`、`practice` 或 `note`，并说明课程归属、依据和不确定项。
+- 外部帖子只能作为参考材料；不得自动生成 `due`、`status`、`milestone` 或技能树级别，也不得把发布时间当作学习日期或 DDL。
+- `practice` 建议必须有明确的 `goal`；缺少本次练习目的时先向用户询问，不得用帖子标题或摘要代填。
+- 每篇帖子必须单独经过用户确认后，才能进入 implementer 的批准计划；批量确认或默认同意不成立。
+
 ## 计划输出
 
 使用中文，至少包含：

@@ -32,6 +32,6 @@ status: ing
 
 课程总纲截图：
 
-![Procreate 零基础系统插画课程总纲](assets/course-illustration.png)
+![Procreate 零基础系统插画课程总纲](../assets/1-courses/illustration-creative/course-illustration.png)
 
 各阶段具体课次与上课日期待每次上课后补录。

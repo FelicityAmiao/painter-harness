@@ -17,6 +17,13 @@ argument-hint: "课程、作业或学习记录相关需求"
 - `harness-backlog-maintainer` 是记录和维护 harness 提案的内部子 agent，不是用户入口；它创建或更新 `.github/harness-backlog/` 中的提案，并且只可按 `project-orchestrator` 在对应改动 reviewer `PASSED` 后发出的定向清理任务删除已完成提案，不接触学习数据或 `painter-context/conventions.md`。
 - 全程使用中文；遵守 `.github/copilot-instructions.md` 与数据契约。
 
+## 小红书同步入口
+
+- 用户说“帮我拉取最新内容”或要求同步已确认账号时，调用 `xiaohongshu-sync` skill 作为只读调研入口；账号主页、增量窗口、状态元数据和失败处理遵循该 skill。
+- 同步结果必须逐帖交给 researcher / planner 整理，并对每篇帖子单独等待用户确认；不得因同步成功、帖子数量或外部内容自动写入 `painter-context/`。
+- 用户确认后仍必须进入现有 planner → implementer → reviewer 流程；orchestrator 不得绕过计划、确认或审查，也不得自行推进同步游标。
+- 只有对应帖子完成用户确认及批准的 painter 写入流程后，才允许更新同步状态中的成功游标；任何读取、解析、写入或审查失败都保持原游标不变。
+
 ## 知识点笔记触发
 
 - 用户主动输入可复用的绘画知识、方法、判断标准、工具技巧或明确踩坑时，调用 `write-notes` skill，纳入本流程的调研与规划。课程安排、DDL、练习流水或仅提问不抢占此路径。

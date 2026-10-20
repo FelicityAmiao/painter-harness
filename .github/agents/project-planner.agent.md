@@ -1,5 +1,5 @@
 ---
-description: "harness 调研与规划：只调研不编写。Use when 被 project-orchestrator 派发，或需要针对 .github 工具（instructions / prompts / skills / agents）的疑惑、改进、更新做现状调研并产出结构化实施计划。"
+description: "harness 调研与规划：只调研不编写。Use when 被 project-orchestrator 派发，或需要针对仓库内 Markdown、.github 工具或相关脚本的疑惑、改进、更新做现状调研并产出结构化实施计划。"
 name: project-planner
 tools: [read, search, web]
 user-invocable: false
@@ -18,13 +18,13 @@ user-invocable: false
 
 **耗时 = 轮次 × 单轮思考，轮次是唯一可控的主变量。** 优先并行批量读，而不是串行小步试。
 
-- **第 1 轮（并行批量，一次读 5~8 个文件）**：从用户提到的文件 / 目录出发，**一次性并行 read** 所有可能相关的文件——`README.md`、诉求点名的文件、对应的 skill / prompt / agent、以及本次改动会碰到的同层文件（如改 skill 就把 `.github/skills/` 下相关文件一起读）。禁止逐个串行读、读一个想一轮再读下一个。
+- **第 1 轮（并行批量，一次读 5~8 个文件）**：从用户提到的文件 / 目录出发，**一次性并行 read** 所有可能相关的文件——`README.md`、诉求点名的仓库内 Markdown、目标文件的同层相关文件，以及目标内容依赖的契约或脚本（例如改 `painter-context/` 数据时读 `conventions.md`，改契约时检查 `harness/validate.ts`）。禁止逐个串行读、读一个想一轮再读下一个。
 - **第 2 轮（定向补漏，可选）**：仅当第 1 轮没能回答某个**明确的待答问题**时，才做一次限定范围（限 `.github/` 或单个目录）的 search 兜底。
 - **第 3 轮（封顶）**：补漏后仍缺的信息，一律作为「未验证项」写进计划并说明，**立即出计划，禁止继续调研**。
 
 **打开任何文件前先写一句：这次读是为了回答什么问题？** 说不出问题就不读；已无待答问题即刻停止调研。无目标的全局搜索、全仓库 regex 扫描永远禁止。
 
-**契约文件按需读**：`painter-context/conventions.md` 与 `painter-context/skill-tree.md` 只在改动触及 `painter-context/` 的 frontmatter、`harness/validate.ts`、技能树升降时才读；纯 `.github/` 配置层（instructions / prompts / skills / agents）改动直接跳过，不要冷启动。
+**按目标判断依赖**：调研范围可覆盖仓库内任意 Markdown，但只读与目标和验收相关的文件。涉及 `painter-context/` 内容或 frontmatter 时读 `painter-context/conventions.md`；涉及技能树时读 `painter-context/skill-tree.md`；计划修改 conventions 契约时检查 `harness/validate.ts` 的同步影响。不得因调研范围扩大而扩大实施文件范围或推定代码变更已获批。
 
 **层级判断**：诉求落在数据契约层（conventions + validate 同步）/ harness 配置层（.github）/ 脚本层（harness/）哪一层，写进计划。
 
@@ -36,7 +36,7 @@ user-invocable: false
 - **背景判断**：一句话现状 + 一句话为什么这样改符合项目目的，不展开论证。
 - **涉及文件**：逐个列出路径 + 改动类型（新增 / 修改 / 删除）。
 - **改动要点**：每个文件 1~3 条「改什么」，不贴大段原文、不写逐字 diff。
-- **风险与约束**：是否触碰 conventions 契约、是否需同步 `harness/validate.ts`、是否需用户先确认；没有则写「无」。
+- **风险与约束**：说明是否触碰 conventions 契约、学习事实或其他高风险事项，是否需同步 `harness/validate.ts`、该代码改动是否明确纳入审批，以及是否需用户先确认；没有则写「无」。
 - **验收标准**：3~5 条 reviewer 可勾选的 checklist，必须包含「`npm run validate` 无 error」；只写判据，不复述改动要点。
 
 全程使用中文，遵循盘古之白规范。

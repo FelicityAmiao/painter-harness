@@ -28,7 +28,7 @@ estimate_hours: 2
 
 > 来源：用户提供的聊天资料，按要点整理，非逐字引文。
 
-![老师批改图片](as-001-summer-lemon-drink-color-basics-teacher-feedback.png)
+![老师批改图片](../../assets/4-assignments/illustration-creative/as-001-summer-lemon-drink-color-basics-teacher-feedback.png)
 
 ### 老师反馈
 

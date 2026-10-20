@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
 import test from "node:test";
-import { renderMarkdown, resolveMarkdownHref } from "./site";
+import { buildSite, renderMarkdown, resolveMarkdownHref } from "./site";
+import { ROOT } from "./lib";
 
 test("Markdown headings produce fragment-compatible IDs", () => {
   const html = renderMarkdown("# Anchor Test\n\n# 中文标题\n\n# 中文标题\n\n# 中文 标题");
@@ -39,4 +42,22 @@ test("relative Markdown links resolve to known site pages", () => {
     resolveMarkdownHref("painter-context/1-courses/course.md", "missing.md", content),
     null,
   );
+});
+
+test("site embeds archived images and excludes the asset archive from navigation", () => {
+  buildSite();
+  const html = fs.readFileSync(path.join(ROOT, "dist", "index.html"), "utf8");
+  const match = html.match(/window\.__DATA__ = (.*?);<\/script>/s);
+  assert.ok(match);
+
+  const data = JSON.parse(match[1]) as {
+    dirs: string[];
+    manifest: Array<{ p: string }>;
+    content: Record<string, string>;
+  };
+  const assignmentPath = "painter-context/4-assignments/illustration-creative/as-001-summer-lemon-drink-color-basics.md";
+
+  assert.ok(!data.dirs.includes("painter-context/assets"));
+  assert.ok(!data.manifest.some((entry) => entry.p.startsWith("painter-context/assets/")));
+  assert.match(data.content[assignmentPath], /<img src="data:image\/png;base64,/);
 });

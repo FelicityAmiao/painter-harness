@@ -74,9 +74,17 @@ painter-harness/
 
 需要整理课程材料、制定学习计划或实施学习数据变更时，可从 `painter-orchestrator` 入口提出需求。它只负责调度，不直接修改学习数据；`painter-researcher` 只读调研课程材料与已有记录，明确区分参考材料和 `painter-context/` 事实源；`painter-planner` 依据已记录事实与 assignment 硬截止制定计划，不写文件；`painter-implementer` 只按明确批准的计划实施；`painter-reviewer` 只读检查改动并运行 `npm run validate`。
 
-默认流程为「调研 → 规划 → 用户批准计划 → 实施 → 只读审查 → 用户决定」。对于用户明确提出、目标和文件范围清楚、仅修改 `.github/` harness 配置或相关文档的低风险需求，可使用快速通道「直接实施 → 只读审查 → 用户决定」，跳过 researcher 和 planner。快速通道仍必须由 `painter-implementer` 实施并由 `painter-reviewer` 审查，不代表 orchestrator 自行修改或跳过审查。
+默认流程为「调研 → 规划 → 用户批准计划 → 实施 → 只读审查 → 用户决定」。对于用户明确提出、目标和文件范围清楚、仅修改低风险 Markdown 或 harness 配置的需求，可使用快速通道「直接实施 → 只读审查 → 用户决定」，跳过 researcher 和 planner。快速通道仍必须由 `painter-implementer` 实施并由 `painter-reviewer` 审查，不代表 orchestrator 自行修改或跳过审查。
 
 快速通道要求 orchestrator 能明确列出改动文件、允许范围、禁止事项和验收标准。涉及 `painter-context/` 学习事实、`painter-context/conventions.md`、数据 schema、`harness/validate.ts`、DDL、里程碑、技能树级别、事实状态判断、外部调研、需求取舍、广泛重构或任何破坏性变更时，必须走原有完整流程。审查通过后按状态机结束或清理关联 backlog；审查失败时沿用 retry，达到上限后进入 `ESCALATED`，不会跳过审查或自动宣告完成。用户要求修改计划时回到 planner。
+
+### 仓库维护 agent 流程
+
+`project-orchestrator`、`project-planner`、`project-implementer` 与 `project-reviewer` 负责本仓库 harness 和文档的调研、实施与审查。已批准计划可以将仓库内任意 Markdown 列为实施目标，包括 `painter-context/` 与 `painter-context/conventions.md`；这只是文件范围权限，不代表可以擅自改变学习事实、数据契约或状态，也不会自动授权修改代码或脚本。
+
+目标明确的低风险 Markdown 修改可走「快速实施 → 审查」通道。涉及学习事实、conventions 契约、DDL、里程碑、技能树级别或事实状态判断时，必须先调研、制定计划、向用户展示并获得批准，再实施和审查。修改 `conventions.md` 若需要同步改 `harness/validate.ts`，该代码文件及影响必须明确写入另行获批的计划，不能从 Markdown 范围推定授权。`painter-context/reports/` 始终禁止手动编辑；不得删除或覆盖用户数据。
+
+仓库 Markdown 写入后运行 `npm run validate`；任何 `painter-context/` 下的 Markdown 写入后还运行 `npm run build`。`npm run build` 失败时需报告，因为生成站点可能过期。
 
 ## 站点预览
 

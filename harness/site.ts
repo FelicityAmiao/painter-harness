@@ -5,7 +5,7 @@ import { marked, type Tokens } from "marked";
 import { ROOT, toPosix, walkMd } from "./lib";
 
 /** 站点收录的目录（harness 本身、模板、配置不上站） */
-const SITE_SKIP = new Set(["node_modules", "dist", ".git", "harness", ".github", "templates"]);
+const SITE_SKIP = new Set(["node_modules", "dist", ".git", "harness", ".github", "templates", "assets"]);
 const ROOT_FILES = ["README.md"];
 const DIRS = ["painter-context"];
 
